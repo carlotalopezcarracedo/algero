@@ -1,0 +1,12 @@
+{
+  "date": "2026-08-17",
+  "framework": "Vite + React 19 + TypeScript",
+  "designSystem": "design.md",
+  "tokens": "tokens.css",
+  "genre": "editorial hospitality",
+  "theme": "Villa Barbarina locked system",
+  "fonts": ["Cormorant Garamond", "Instrument Sans", "JetBrains Mono"],
+  "motion": "restrained; reduced-motion supported",
+  "assets": "real property and destination photography in public/images/villa",
+  "booking": "Octorate property code 314439"
+}

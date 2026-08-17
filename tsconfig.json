@@ -13,6 +13,10 @@
     "moduleResolution": "bundler",
     "isolatedModules": true,
     "moduleDetection": "force",
+    "types": [
+      "node",
+      "vite/client"
+    ],
     "allowJs": true,
     "jsx": "react-jsx",
     "paths": {
@@ -22,5 +26,15 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "skills",
+    "dist",
+    "node_modules"
+  ]
 }

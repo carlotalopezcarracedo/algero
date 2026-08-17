@@ -1,49 +1,57 @@
 # Design System — Villa Barbarina Nature Resort
 
-*Locked design system generated per Hallmark & UI/UX Pro Max standards.*
+*Locked application-wide visual system. Future work should extend this world, not reinterpret it.*
 
-## 1. Provenance & Identity
-- **Project**: Villa Barbarina Nature Resort (Alghero, Sardinia)
-- **Macrostructure**: Atelier / Editorial Magazine
-- **Genre**: Editorial (Luxury Mediterranean Nature Sanctuary)
-- **Nav Archetype**: N1b (Elevated Editorial Nav with Language Switcher & Direct Booking Action)
-- **Footer Archetype**: Ft5 (Statement Architectural Colophon)
-- **Tone**: Quiet Luxury · Tactile · Earthy · Mediterranean Minimalist
+## 1. Identity and structure
 
----
+- **Project**: Villa Barbarina Nature Resort, Alghero.
+- **Genre**: editorial hospitality.
+- **Macrostructure**: Photographic Chapters — full-bleed real photography alternates with quiet editorial spreads, ledgers and field notes.
+- **Navigation**: N1b split-pane with language switcher and permanent direct-booking action.
+- **Footer**: Ft5 architectural statement and factual colophon.
+- **Tone**: quiet, tactile, earthy, Mediterranean and precise.
 
-## 2. Typography Rules (Hallmark Discipline)
-- **Display Typeface**: `Cormorant Garamond` (Weights: 300 Light, 400 Regular, 500 Medium)
-  - *Hard Rule*: All headings and display titles are upright / Roman (`font-style: normal`). No italic headers.
-- **Body Typeface**: `Plus Jakarta Sans` (Weights: 400, 500, 600)
-- **Technical & Coordinates Typeface**: `JetBrains Mono` / Monospace for labels, room dimensions, timestamps, coordinates.
+The homepage uses a 38/62 copy-and-image opening spread. Interior pages share the same type, palette, rules and controls but change composition by subject: story fragments for the resort, an indexed directory for rooms, a kitchen diptych for the restaurant, field-note rows for itineraries and a direct utility layout for contact.
 
----
+## 2. Typography
 
-## 3. Color Palette Tokens (OKLCH)
-- **Paper Primary**: `oklch(98.2% 0.008 75)` (`#FAF7F2` — Mineral plaster)
-- **Paper Subtle**: `oklch(94.8% 0.012 78)` (`#EFECE5` — Sun-warmed sand)
-- **Ink Primary**: `oklch(18.5% 0.02 135)` (`#172017` — Deep vegetal pine)
-- **Accent Terracotta**: `oklch(53% 0.13 42)` (`#A25336` — Terracotta stone)
-- **Accent Ochre / Gold**: `oklch(72% 0.12 85)` (`#C6A24D` — Mediterranean ochre)
-- **Border Hairline**: `oklch(88% 0.01 80)` (10% ink opacity)
+- **Display**: `Cormorant Garamond`, weights 300–500. Headings are always upright; never italic.
+- **Body and controls**: `Instrument Sans`, weights 400–700.
+- **Technical register**: `JetBrains Mono`, limited to coordinates, labels, indexes and factual metadata.
+- Headlines may balance across lines, but words should only break as a last-resort overflow safeguard.
+- Prose uses a 48–68ch measure and body text never drops below 16px.
 
----
+## 3. Colour
 
-## 4. Interaction & 8-State Standards
-All interactive elements (buttons, inquiry form inputs, tabs, booking triggers) strictly implement:
-1. `default`: Clean tactile border / solid mineral tone.
-2. `hover`: Subtle scale / background shift with `var(--ease-out)`.
-3. `:focus-visible`: 2px high-contrast outline (`var(--color-focus)`), zero delay.
-4. `:active`: 1px translateY compression.
-5. `disabled`: Opacity 40%, cursor not-allowed.
-6. `loading`: Inline spinner + disabled state.
-7. `error`: Explicit red outline + error message below input.
-8. `success`: Inline green confirmation.
+- **Mineral paper**: `oklch(98.2% 0.008 75)`.
+- **Sun-warmed paper**: `oklch(94.8% 0.012 78)`.
+- **Vegetal ink**: `oklch(18.5% 0.02 135)`.
+- **Pine chapter**: `oklch(24% 0.032 138)`.
+- **Terracotta action**: `oklch(53% 0.13 42)`.
+- **Ochre detail**: `oklch(72% 0.12 85)`.
 
----
+Use terracotta for booking and directional emphasis, not decoration. Dark sections always switch to the dedicated on-dark ink token. All neutrals carry a warm or vegetal chroma; pure black and white are excluded.
 
-## 5. Exports
+## 4. Layout and imagery
 
-### tokens.css
-See `/tokens.css` for root CSS custom properties.
+- Base spacing follows the 4px scale in `tokens.css`; outer gutters are fluid.
+- Structure is expressed with split planes, asymmetric image crops, hairline rules and deliberate open space, not rounded cards.
+- Photography must be real Villa Barbarina or destination imagery recovered from approved source material. Do not introduce stock luxury imagery, gradients or abstract filler.
+- Room lists are editorial indexes, itineraries are field-note rows and facts are presented as ledgers rather than feature-card grids.
+- Mobile collapses to one reading column, preserves 44px targets and never permits horizontal scrolling.
+
+## 5. Interaction and motion
+
+- Focus rings appear immediately and remain visibly distinct on light and dark surfaces.
+- Hover changes one property family at a time; active controls use a restrained 1px compression.
+- Inputs keep constant 1px borders across states, use native validation and preserve visible labels.
+- Motion is limited to directional arrow shifts, the mobile navigation reveal and a subtle photo crossfade. `prefers-reduced-motion` removes them.
+- Booking always opens the official Octorate flow. Contact submissions retain the official endpoint and open its confirmation in a separate tab.
+
+## 6. Durable assets
+
+- Semantic design tokens: `/tokens.css`.
+- Application styles and responsive rules: `/src/styles.css`.
+- Route content, URLs and room facts: `/src/data.ts`.
+- Approved photography: `/public/images/villa/`.
+- Product truth and non-invention constraints: `/PRODUCT.md`.

@@ -1,4 +1,4 @@
-/* Hallmark · macrostructure: Atelier · tone: luxury editorial · anchor hue: 35deg */
+/* Hallmark · genre: editorial · macrostructure: Photographic Chapters · design-system: design.md · designed-as-app */
 /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
 
 :root {
@@ -6,23 +6,30 @@
      COLOR SYSTEM (OKLCH & HEX COMPATIBILITY)
      Mineral Whites, Sun-baked Terracotta, Vegetal Forest Dark & Golden Ochre
      ========================================================================== */
-  --color-paper: oklch(98.2% 0.008 75);      /* #FAF7F2 - Mineral plaster white */
-  --color-paper-subtle: oklch(94.8% 0.012 78); /* #EFECE5 - Sand mineral warm */
-  --color-paper-card: oklch(100% 0 0);        /* Pure White */
+  --color-paper: oklch(98.2% 0.008 75);
+  --color-paper-subtle: oklch(94.8% 0.012 78);
+  --color-paper-card: oklch(99.1% 0.006 74);
+  --color-paper-overlay: oklch(98.2% 0.008 75 / 88%);
   
-  --color-ink: oklch(18.5% 0.02 135);        /* #172017 - Deep Vegetal Pine */
-  --color-ink-muted: oklch(35% 0.015 135);    /* #3B463B - Dark stone vegetal */
-  --color-ink-faint: oklch(55% 0.01 135);    /* #727D72 - Muted stone */
+  --color-ink: oklch(18.5% 0.02 135);
+  --color-ink-muted: oklch(35% 0.015 135);
+  --color-ink-faint: oklch(48% 0.012 135);
+  --color-ink-on-dark: oklch(96% 0.01 80);
+  --color-pine: oklch(24% 0.032 138);
+  --color-pine-deep: oklch(15% 0.022 138);
   
-  --color-accent: oklch(53% 0.13 42);        /* #A25336 - Raw terracotta */
-  --color-accent-hover: oklch(46% 0.14 42);  /* #853E26 - Deep terracotta */
-  --color-accent-subtle: oklch(94% 0.03 42); /* #F7EDE7 - Terracotta tint */
+  --color-accent: oklch(53% 0.13 42);
+  --color-accent-hover: oklch(46% 0.14 42);
+  --color-accent-subtle: oklch(94% 0.03 42);
+  --color-accent-ink: oklch(98% 0.008 75);
   
   --color-gold: oklch(72% 0.12 85);          /* #C6A24D - Mediterranean gold */
   --color-gold-muted: oklch(85% 0.05 85);    /* #E8D9B5 */
   
-  --color-border: oklch(88% 0.01 80);        /* rgba(0,0,0,0.1) */
+  --color-border: oklch(82% 0.012 80);
   --color-border-subtle: oklch(92% 0.008 80);
+  --color-border-dark: oklch(48% 0.018 138);
+  --color-shadow: oklch(15% 0.02 138 / 18%);
   
   --color-focus: oklch(53% 0.13 42);
   --color-error: oklch(50% 0.18 25);
@@ -32,7 +39,7 @@
      TYPOGRAPHY TOKENS
      ========================================================================== */
   --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, monospace;
 
   /* Type Scale */
@@ -46,7 +53,8 @@
   --text-4xl: 2.5rem;       /* 40px */
   --text-5xl: 3.25rem;      /* 52px */
   --text-6xl: 4.25rem;      /* 68px */
-  --text-display: 5.5rem;   /* 88px */
+  --text-display: clamp(3.75rem, 6.1vw, 6rem);
+  --text-display-small: clamp(3rem, 5vw, 5rem);
 
   /* ==========================================================================
      4-PT SPACING SCALE
@@ -75,4 +83,11 @@
   --radius-none: 0px;
   --radius-sm: 2px;
   --radius-md: 4px;
+
+  /* Layout */
+  --page-gutter: clamp(1.25rem, 3vw, 3.5rem);
+  --measure: 68ch;
+  --measure-narrow: 48ch;
+  --header-height: 5rem;
+  --shadow-soft: 0 1rem 3rem var(--color-shadow);
 }

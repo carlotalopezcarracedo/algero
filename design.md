@@ -7,11 +7,11 @@
 - **Project**: Villa Barbarina Nature Resort, Alghero.
 - **Genre**: editorial hospitality.
 - **Macrostructure**: Photographic Chapters — full-bleed real photography alternates with quiet editorial spreads, ledgers and field notes.
-- **Navigation**: N1b split-pane with language switcher and permanent direct-booking action.
+- **Navigation**: transparent masthead over photography, with language switcher and a permanent terracotta direct-booking action.
 - **Footer**: Ft5 architectural statement and factual colophon.
 - **Tone**: quiet, tactile, earthy, Mediterranean and precise.
 
-The homepage uses a 38/62 copy-and-image opening spread. Interior pages share the same type, palette, rules and controls but change composition by subject: story fragments for the resort, an indexed directory for rooms, a kitchen diptych for the restaurant, field-note rows for itineraries and a direct utility layout for contact.
+The homepage opens on a single aerial field image with a staggered three-line statement and factual estate rail. Interior pages share the same type, palette, rules and controls but change composition by subject: an asymmetric estate sequence for the resort, a viewport-scale room index, a dense kitchen spread, field-note rows for itineraries and a direct utility layout for contact.
 
 ## 2. Typography
 
@@ -35,7 +35,7 @@ Use terracotta for booking and directional emphasis, not decoration. Dark sectio
 ## 4. Layout and imagery
 
 - Base spacing follows the 4px scale in `tokens.css`; outer gutters are fluid.
-- Structure is expressed with split planes, asymmetric image crops, hairline rules and deliberate open space, not rounded cards.
+- Structure is expressed with full-bleed fields, asymmetric image crops, hairline rules and deliberate open space, not rounded cards.
 - Photography must be real Villa Barbarina or destination imagery recovered from approved source material. Do not introduce stock luxury imagery, gradients or abstract filler.
 - Room lists are editorial indexes, itineraries are field-note rows and facts are presented as ledgers rather than feature-card grids.
 - Mobile collapses to one reading column, preserves 44px targets and never permits horizontal scrolling.
@@ -43,9 +43,9 @@ Use terracotta for booking and directional emphasis, not decoration. Dark sectio
 ## 5. Interaction and motion
 
 - Focus rings appear immediately and remain visibly distinct on light and dark surfaces.
-- Hover changes one property family at a time; active controls use a restrained 1px compression.
+- Hover is only enabled for precise pointers; active controls use a restrained `scale(0.97)` response.
 - Inputs keep constant 1px borders across states, use native validation and preserve visible labels.
-- Motion is limited to directional arrow shifts, the mobile navigation reveal and a subtle photo crossfade. `prefers-reduced-motion` removes them.
+- Motion is limited to the rare opening reveal, directional arrow feedback and the mobile navigation reveal. UI transitions remain below 300ms; `prefers-reduced-motion` keeps only gentle state changes.
 - Booking always opens the official Octorate flow. Contact submissions retain the official endpoint and open its confirmation in a separate tab.
 
 ## 6. Durable assets

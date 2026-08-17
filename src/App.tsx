@@ -243,28 +243,32 @@ function Header({ pathname }: { pathname: string }) {
 function HomeHero() {
   return (
     <section className="home-hero" aria-labelledby="home-title">
-      <div className="home-hero__copy">
-        <h1 id="home-title">Relax autentico nell’anima verde della Sardegna</h1>
-        <p className="home-hero__intro">Tra ulivi, vigne e il mare di Alghero.</p>
-        <div className="home-hero__coordinates">{CONTACT.coordinates}</div>
-      </div>
-
-      <figure className="home-hero__small-photo">
-        <Photo
-          src="/images/villa/villa-exterior.webp"
-          alt="Camera di Villa Barbarina aperta sul giardino"
-          eager
-        />
-      </figure>
-
       <figure className="home-hero__main-photo">
         <Photo
-          src="/images/villa/pool-guest.webp"
-          alt="Ospite che legge a bordo piscina a Villa Barbarina"
+          src="/images/villa/aerial.webp"
+          alt="Villa Barbarina tra ulivi e campagna nella Nurra"
           eager
         />
-        <figcaption>Il tempo lento, a bordo piscina.</figcaption>
       </figure>
+
+      <div className="home-hero__copy">
+        <p className="home-hero__kicker">Tenuta agricola · Alghero, Sardegna</p>
+        <h1 id="home-title">
+          <span>Relax autentico</span>
+          {' '}
+          <span>nell’anima verde</span>
+          {' '}
+          <span>della Sardegna</span>
+        </h1>
+        <p className="home-hero__intro">Tra ulivi, vigne e il mare di Alghero.</p>
+      </div>
+
+      <div className="home-hero__coordinates">{CONTACT.coordinates}</div>
+      <div className="home-hero__edition" aria-hidden="true">
+        <span>5 ettari di quiete</span>
+        <span>23 camere</span>
+        <span>Il mare a pochi minuti</span>
+      </div>
     </section>
   );
 }
@@ -287,8 +291,15 @@ function ResortIntroduction() {
       </div>
       <figure className="resort-intro__photo">
         <Photo
-          src="/images/villa/grounds.webp"
-          alt="Il parco e gli edifici di Villa Barbarina"
+          src="/images/villa/olive-grove.webp"
+          alt="La piscina e il corpo centrale di Villa Barbarina"
+        />
+        <figcaption>Cinque ettari tra ulivi, vigne e prati.</figcaption>
+      </figure>
+      <figure className="resort-intro__detail-photo">
+        <Photo
+          src="/images/villa/villa-exterior.webp"
+          alt="Una camera aperta sul giardino della tenuta"
         />
       </figure>
     </section>
@@ -318,6 +329,9 @@ function RoomIndex() {
             onMouseEnter={() => setActiveSlug(room.slug)}
             onFocus={() => setActiveSlug(room.slug)}
           >
+            <span className="room-index__number">
+              {String(rooms.indexOf(room) + 1).padStart(2, '0')}
+            </span>
             <span className="room-index__name">{room.menuName}</span>
             <span className="room-index__meta">{room.capacity}</span>
             <ArrowRight aria-hidden="true" size={22} strokeWidth={1.4} />
@@ -342,10 +356,12 @@ function FoodChapter() {
       <figure className="food-chapter__main-photo">
         <Photo
           src="/images/villa/crudo.webp"
-          alt="Piatto del ristorante di Villa Barbarina"
+          alt="Piatto di mare del ristorante di Villa Barbarina"
         />
+        <figcaption>Ingredienti sardi, senza distanze.</figcaption>
       </figure>
       <div className="food-chapter__copy">
+        <span className="food-chapter__number">III · La tavola</span>
         <h2 id="food-title">
           La Sardegna arriva a tavola senza <span className="no-break">travestimenti.</span>
         </h2>
@@ -361,7 +377,7 @@ function FoodChapter() {
       <figure className="food-chapter__detail-photo">
         <Photo
           src="/images/villa/wines.webp"
-          alt="Vini del territorio serviti al ristorante"
+          alt="La selezione di vini sardi del ristorante"
         />
       </figure>
     </section>
@@ -393,7 +409,10 @@ function PlaceBand() {
         </div>
       </div>
       <figure className="place-band__photo">
-        <Photo src="/images/villa/aerial.webp" alt="Villa Barbarina vista dall’alto" />
+        <Photo
+          src="/images/villa/porticciolo.webp"
+          alt="Il mare e la costa rocciosa vicino ad Alghero"
+        />
       </figure>
       <SiteLink className="place-band__link" href="/itinerari/">
         Disegna il tuo itinerario <ArrowRight aria-hidden="true" size={18} />
@@ -412,6 +431,7 @@ function BookingChapter({
   return (
     <section className="booking-chapter" aria-labelledby="booking-title">
       <div>
+        <span className="booking-chapter__kicker">Arrivare alla tenuta</span>
         <h2 id="booking-title">{title}</h2>
         <p>{copy}</p>
       </div>
@@ -460,6 +480,7 @@ function EditorialHero({
       className={`editorial-hero editorial-hero--${tone} editorial-hero--image-${imagePosition}`}
     >
       <div className="editorial-hero__copy">
+        <span className="editorial-hero__kicker">Villa Barbarina · Alghero</span>
         <h1>{title}</h1>
         <p>{lead}</p>
       </div>

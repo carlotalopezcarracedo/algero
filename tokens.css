@@ -73,11 +73,11 @@
   /* ==========================================================================
      TRANSITIONS & EASING
      ========================================================================== */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --dur-fast: 150ms;
-  --dur-base: 300ms;
-  --dur-slow: 600ms;
+  --dur-base: 220ms;
+  --dur-slow: 720ms;
   
   /* Radii */
   --radius-none: 0px;

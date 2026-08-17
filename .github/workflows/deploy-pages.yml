@@ -2,7 +2,7 @@ name: Deploy Villa Barbarina to GitHub Pages
 
 on:
   push:
-    branches: [main, agent/villa-barbarina-pages]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -42,13 +42,13 @@ jobs:
           VITE_BASE_PATH: /algero/
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

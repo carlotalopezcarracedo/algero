@@ -1,0 +1,7 @@
+{
+  "name": "Villa Barbarina Nature Resort",
+  "description": "Boutique 4-star Nature Resort near Alghero, Sardinia. Official luxury website redesign featuring rooms, restaurant, authentic Sardinian hospitality, itineraries and direct booking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

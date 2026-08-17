@@ -1,0 +1,6 @@
+sed -i 's|https://www.villabarbarina.com/images_offerta/struttura/7566983ec396f7ee4ec236753b892117_ocpprod.jpg|https://www.villabarbarina.com/images_offerta/gallery/home/10esterno-notte.jpg|g' src/data/siteData.ts
+sed -i 's|https://www.villabarbarina.com/images_offerta/camere/DSCF9126-HDR.jpg|https://www.villabarbarina.com/images_offerta/gallery/camera-doppia/2-ok-doppia12.jpg|g' src/data/siteData.ts
+sed -i 's|https://www.villabarbarina.com/images_offerta/gallery/camera-doppia/ok-bagno-doppia-5.jpg|https://www.villabarbarina.com/images_offerta/gallery/home/bagno-mosaico-verde2.jpg|g' src/data/siteData.ts
+sed -i 's|https://www.villabarbarina.com/images_offerta/gallery/mista-camere/DSCF9146-HDR.jpg|https://www.villabarbarina.com/images_offerta/gallery/home/7DSCF9500-HDR.jpg|g' src/data/siteData.ts
+sed -i 's|https://www.villabarbarina.com/images_offerta/gallery/camera-tripla/z-ok-bagno-tripla-2.jpg|https://www.villabarbarina.com/images_offerta/gallery/home/bagno-mosaico-verde2.jpg|g' src/data/siteData.ts
+sed -i 's|https://www.villabarbarina.com/images_offerta/gallery/mista-camere/DSCF9242-HDR.jpg|https://www.villabarbarina.com/images_offerta/gallery/home/33DSCF9672-HDR.jpg|g' src/data/siteData.ts

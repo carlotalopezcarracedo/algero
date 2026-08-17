@@ -1,0 +1,351 @@
+{
+  "/": {
+    "title": "Villa Barbarina Nature Resort Alghero – Relax nella Natura e Ospitalità Autentica in Sardegna",
+    "desc": "Scopri Villa Barbarina, resort 4 stelle immerso nella campagna di Alghero. Camere eleganti, piscina, ristorante tipico, posizione ideale per esplorare la Sardegna nord-occidentale.",
+    "h1s": [
+      "Loading..."
+    ],
+    "h2s": [
+      "Relax Autentico nell&rsquo;Anima Verde della Sardegna",
+      "Scegli la Tua Camera Ideale",
+      "Prenota Ora"
+    ],
+    "h3s": [
+      "Sapori della Tradizione",
+      "Prenota la tua vacanza in Sardegna",
+      "Vuoi arricchire la tua vacanza?"
+    ],
+    "imgs": [
+      "/imgs/logo-bianco.png",
+      "/imgs/logo-scuro.png",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F1piscina-ragazza.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F2camera-esterno.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F3camera-vista-piscina.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F5piscina-aperitivo.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F6camera-aperitivo-terrazza.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F7DSCF9500-HDR.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F8camera-vista-piscina2.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F9resort-reception2.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F10esterno-notte.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2F33DSCF9672-HDR.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fbagno-mosaico-verde2.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fcolazione.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fpizza2.JPG&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fristorante-colazione.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fristorante-crudo.jpg&amp;w=600&amp;h=600",
+      "/image.php?f=images_offerta%2Fgallery%2Fhome%2Fristorante-vini.jpg&amp;w=600&amp;h=600",
+      "https://www.villabarbarina.com/image.php?f=images_offerta%2Fgallery%2Fcamera-doppia%2F2-ok-doppia12.jpg&w=600&h=400",
+      "https://www.villabarbarina.com/image.php?f=images_offerta%2Fgallery%2Fcamera-tripla%2F1-ok-tripla-10.jpg&w=600&h=400",
+      "https://www.villabarbarina.com/image.php?f=images_offerta%2Fgallery%2Fcamera-junior-suite%2Fok-junior-suite-1.jpg&w=600&h=400",
+      "https://www.villabarbarina.com/image.php?f=images_offerta%2Fcamere%2Fquadrupla%2Fquadrupla-4.jpg&w=600&h=400",
+      "../images_offerta/ristorante/piatto.jpg",
+      "/images_offerta/camere/camera.jpg"
+    ],
+    "videos": [
+      "../images_offerta/villa-barbarina-comp.mp4"
+    ],
+    "bookingLinks": [
+      "https://book.octorate.com/octobook/site/reservation/index.xhtml?codice=314439"
+    ]
+  },
+  "/resort/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/camere/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/camera-doppia/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/camera-tripla/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/camera-quadrupla/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/junior-suite/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/ristorante/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/itinerari/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/servizi-extra/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/contatti/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/privacy-policy/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/cookie-policy/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/resort/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/camere/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/camera-doppia/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/camera-tripla/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/camera-quadrupla/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/junior-suite/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/ristorante/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/itinerari/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/servizi-extra/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/contatti/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/privacy-policy/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  },
+  "/en/cookie-policy/": {
+    "title": "404 Not Found",
+    "desc": "",
+    "h1s": [
+      "Not Found"
+    ],
+    "h2s": [],
+    "h3s": [],
+    "imgs": [],
+    "videos": [],
+    "bookingLinks": []
+  }
+}

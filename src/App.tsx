@@ -1,5 +1,4 @@
 import {
-  ArrowDownRight,
   ArrowRight,
   ChevronDown,
   Mail,
@@ -9,14 +8,19 @@ import {
   Phone,
   X,
 } from 'lucide-react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'motion/react';
 import {
   type AnchorHTMLAttributes,
   type FormEvent,
   type MouseEvent,
   type ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -37,53 +41,49 @@ const BASE_PATH = import.meta.env.BASE_URL.endsWith('/')
   : `${import.meta.env.BASE_URL}/`;
 
 const MOTION = {
-  ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
-  reveal: 0.9,
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+  fast: 0.22,
+  normal: 0.42,
+  slow: 0.85,
 };
 
 const navigation = [
-  { label: 'La tenuta', href: '/resort/' },
+  { label: 'Resort', href: '/resort/' },
   { label: 'Camere', href: '/camere/' },
-  { label: 'La tavola', href: '/ristorante/' },
-  { label: 'Sardegna', href: '/itinerari/' },
+  { label: 'Ristorante', href: '/ristorante/' },
+  { label: 'Itinerari', href: '/itinerari/' },
+  { label: 'Servizi', href: '/servizi-extra/' },
   { label: 'Contatti', href: '/contatti/' },
 ];
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/': {
     title: 'Villa Barbarina Nature Resort | Alghero, Sardegna',
-    description:
-      'Un resort 4 stelle tra ulivi, vigne e il mare di Alghero. Scopri camere, ristorante, itinerari e prenotazione diretta.',
+    description: 'Un resort 4 stelle tra ulivi, vigne e il mare di Alghero. Camere, piscina, ristorante e prenotazione diretta.',
   },
   '/resort/': {
     title: 'Il Resort | Villa Barbarina Nature Resort',
-    description:
-      'Cinque ettari di natura nella Nurra, una storica tenuta agricola e l’ospitalità autentica di Villa Barbarina.',
+    description: 'Cinque ettari di natura nella Nurra, una storica tenuta agricola e l’ospitalità autentica di Villa Barbarina.',
   },
   '/camere/': {
     title: 'Le Camere | Villa Barbarina Nature Resort',
-    description:
-      'Scopri le camere doppie, triple, quadruple e Junior Suite di Villa Barbarina ad Alghero.',
+    description: 'Scopri le camere doppie, triple, quadruple e Junior Suite di Villa Barbarina ad Alghero.',
   },
   '/ristorante/': {
     title: 'Il Ristorante | Villa Barbarina Nature Resort',
-    description:
-      'Cucina sarda, ingredienti locali, pizza cotta nel forno a legna e vini del territorio.',
+    description: 'Cucina sarda, ingredienti locali, pizza cotta nel forno a legna e vini del territorio.',
   },
   '/itinerari/': {
     title: 'Dintorni e itinerari | Villa Barbarina Nature Resort',
-    description:
-      'Da Villa Barbarina verso Alghero, Le Bombarde, Capo Caccia e la costa della Nurra.',
+    description: 'Da Villa Barbarina verso Alghero, Le Bombarde, Capo Caccia e la costa della Nurra.',
   },
   '/servizi-extra/': {
     title: 'Servizi extra | Villa Barbarina Nature Resort',
-    description:
-      'Richiedi informazioni su transfer, esperienze, eventi e servizi per personalizzare il soggiorno.',
+    description: 'Richiedi informazioni su transfer, esperienze, eventi e servizi per personalizzare il soggiorno.',
   },
   '/contatti/': {
     title: 'Contatti | Villa Barbarina Nature Resort',
-    description:
-      'Contatta Villa Barbarina per disponibilità, preventivi personalizzati e informazioni sul soggiorno.',
+    description: 'Contatta Villa Barbarina per disponibilità, preventivi personalizzati e informazioni sul soggiorno.',
   },
 };
 
@@ -152,12 +152,19 @@ function SiteLink({ href, onClick, children, ...props }: SiteLinkProps) {
   return <a href={resolvedHref} onClick={handleClick} {...props}>{children}</a>;
 }
 
-function BookingLink({ children = 'Prenota', className = '' }) {
+function BookingLink({ children = 'Prenota', className = '' }: { children?: ReactNode; className?: string }) {
   return (
-    <a className={`booking-link ${className}`.trim()} href={BOOKING_URL} target="_blank" rel="noreferrer">
-      <span>{children}</span>
-      <ArrowDownRight aria-hidden="true" size={19} strokeWidth={1.5} />
+    <a className={`button button--primary ${className}`.trim()} href={BOOKING_URL} target="_blank" rel="noreferrer">
+      <span>{children}</span><ArrowRight aria-hidden="true" size={17} />
     </a>
+  );
+}
+
+function TextLink({ href, children, light = false }: { href: string; children: ReactNode; light?: boolean }) {
+  return (
+    <SiteLink className={`text-link ${light ? 'text-link--light' : ''}`} href={href}>
+      <span>{children}</span><ArrowRight aria-hidden="true" size={17} />
+    </SiteLink>
   );
 }
 
@@ -178,47 +185,35 @@ function Photo({ src, alt, className = '', eager = false }: PhotoProps) {
   );
 }
 
-function ImageReveal({ src, alt, className = '', caption }: PhotoProps & { caption?: string }) {
+function ImageReveal({ src, alt, className = '', eager = false }: PhotoProps) {
   const reduceMotion = useReducedMotion();
   return (
     <motion.figure
       className={`image-reveal ${className}`.trim()}
-      initial="hidden"
-      animate="visible"
+      initial={reduceMotion ? false : { clipPath: 'inset(8% 0 0 0)', opacity: 0.72 }}
+      whileInView={{ clipPath: 'inset(0% 0 0 0)', opacity: 1 }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: MOTION.slow, ease: MOTION.ease }}
     >
       <motion.div
-        variants={{
-          hidden: reduceMotion ? { clipPath: 'inset(0 0 0% 0)' } : { clipPath: 'inset(0 0 100% 0)' },
-          visible: { clipPath: 'inset(0 0 0% 0)' },
-        }}
-        transition={{ duration: MOTION.reveal, ease: MOTION.ease }}
+        initial={reduceMotion ? false : { scale: 1.03 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, amount: 0.16 }}
+        transition={{ duration: MOTION.slow, ease: MOTION.ease }}
       >
-        <Photo src={src} alt={alt} eager />
+        <Photo src={src} alt={alt} eager={eager} />
       </motion.div>
-      {caption ? <figcaption>{caption}</figcaption> : null}
     </motion.figure>
-  );
-}
-
-function ParallaxPhoto({ src, alt, className = '' }: PhotoProps) {
-  const ref = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [-24, 24]);
-  return (
-    <figure ref={ref} className={`parallax-photo ${className}`.trim()}>
-      <motion.div style={reduceMotion ? undefined : { y }}><Photo src={src} alt={alt} eager /></motion.div>
-    </figure>
   );
 }
 
 function Header({ pathname }: { pathname: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const inverseAtTop = ['/resort/', '/ristorante/', '/itinerari/'].includes(pathname);
+  const hasLightHero = rooms.some((room) => room.slug === pathname);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -228,10 +223,18 @@ function Header({ pathname }: { pathname: string }) {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false); };
+    const backgroundTargets = document.querySelectorAll<HTMLElement>('#app-content, .site-footer');
+    backgroundTargets.forEach((element) => {
+      if (menuOpen) element.setAttribute('inert', '');
+      else element.removeAttribute('inert');
+    });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
     window.addEventListener('keydown', onKeyDown);
     return () => {
       document.body.style.overflow = '';
+      backgroundTargets.forEach((element) => element.removeAttribute('inert'));
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [menuOpen]);
@@ -239,180 +242,374 @@ function Header({ pathname }: { pathname: string }) {
   return (
     <>
       <a className="skip-link" href="#main-content">Vai al contenuto</a>
-      <header className={`site-header ${inverseAtTop ? 'is-inverse' : ''} ${scrolled ? 'is-scrolled' : ''} ${menuOpen ? 'menu-is-open' : ''}`}>
+      <header className={`site-header ${scrolled ? 'is-scrolled' : 'is-at-top'} ${hasLightHero ? 'has-light-hero' : ''} ${menuOpen ? 'is-menu-open' : ''}`}>
         <SiteLink href="/" className="wordmark" aria-label="Villa Barbarina, home">
           <span>Villa</span><strong>Barbarina</strong><small>Nature Resort · Alghero</small>
         </SiteLink>
         <nav className="desktop-nav" aria-label="Navigazione principale">
-          {navigation.map((item) => <SiteLink key={item.href} href={item.href} aria-current={pathname === item.href ? 'page' : undefined}>{item.label}</SiteLink>)}
+          {navigation.map((item) => (
+            <SiteLink key={item.href} href={item.href} aria-current={pathname === item.href ? 'page' : undefined}>
+              {item.label}
+            </SiteLink>
+          ))}
         </nav>
         <div className="header-actions">
           <a className="language-link" href="https://www.villabarbarina.com/en/">IT <span>/ EN</span></a>
           <BookingLink className="header-booking">Prenota</BookingLink>
-          <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="fullscreen-menu" aria-label={menuOpen ? 'Chiudi il menu' : 'Apri il menu'} onClick={() => setMenuOpen((value) => !value)}>
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Chiudi il menu' : 'Apri il menu'}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
             {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
         </div>
       </header>
-      <div id="fullscreen-menu" className={`fullscreen-menu ${menuOpen ? 'is-open' : ''}`} aria-hidden={!menuOpen}>
+      <div id="mobile-menu" className={`mobile-menu ${menuOpen ? 'is-open' : ''}`} aria-hidden={!menuOpen}>
         <nav aria-label="Menu mobile">
-          {navigation.map((item, index) => <SiteLink href={item.href} key={item.href} tabIndex={menuOpen ? 0 : -1}><span>{String(index + 1).padStart(2, '0')}</span>{item.label}</SiteLink>)}
-          <SiteLink href="/servizi-extra/" tabIndex={menuOpen ? 0 : -1}><span>06</span>Servizi extra</SiteLink>
+          {navigation.map((item, index) => (
+            <motion.div
+              key={item.href}
+              initial={false}
+              animate={menuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{ duration: MOTION.normal, ease: MOTION.ease, delay: menuOpen ? index * 0.035 : 0 }}
+            >
+              <SiteLink href={item.href} tabIndex={menuOpen ? 0 : -1}>{item.label}</SiteLink>
+            </motion.div>
+          ))}
         </nav>
-        <div className="fullscreen-menu__aside"><span>{CONTACT.coordinates}</span><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></div>
+        <div className="mobile-menu__footer">
+          <BookingLink className="mobile-menu__booking">Prenota il soggiorno</BookingLink>
+          <div><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></div>
+          <a href="https://www.villabarbarina.com/en/">Italiano / English</a>
+        </div>
       </div>
     </>
   );
 }
 
 function HomeHero() {
+  const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.035]);
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -28]);
+
   return (
-    <section className="arrival" aria-labelledby="arrival-title">
-      <motion.div className="arrival__veil" initial={reduceMotion ? false : { scaleY: 1 }} animate={{ scaleY: 0 }} transition={{ duration: 1.05, ease: MOTION.ease, delay: 0.08 }} aria-hidden="true" />
-      <div className="arrival__word arrival__word--back" aria-hidden="true">BARBARINA</div>
-      <motion.figure className="arrival__landscape" initial={reduceMotion ? false : { clipPath: 'inset(8% 8% 8% 8%)' }} animate={{ clipPath: 'inset(0% 0% 0% 0%)' }} transition={{ duration: 1.25, ease: MOTION.ease, delay: 0.25 }}>
-        <Photo src="/images/villa/olive-grove.webp" alt="La piscina e il corpo centrale di Villa Barbarina nella campagna della Nurra" eager />
+    <section className="home-hero" ref={heroRef} aria-labelledby="home-hero-title">
+      <motion.figure
+        className="home-hero__media"
+        initial={reduceMotion ? false : { opacity: 0, scale: 1.025 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.05, ease: MOTION.ease }}
+        style={reduceMotion ? undefined : { scale: imageScale }}
+      >
+        <Photo src="/images/villa/olive-grove.webp" alt="La piscina e il corpo centrale di Villa Barbarina nella campagna di Alghero" eager />
       </motion.figure>
-      <motion.div className="arrival__word arrival__word--front" initial={reduceMotion ? false : { y: '115%' }} animate={{ y: 0 }} transition={{ duration: 1.1, ease: MOTION.ease, delay: 0.55 }} aria-hidden="true">RINA</motion.div>
-      <motion.div className="arrival__copy" initial={reduceMotion ? false : { opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: MOTION.ease, delay: 0.75 }}>
-        <p className="eyebrow">Tenuta agricola · Santa Maria la Palma</p>
-        <h1 id="arrival-title">Relax autentico nell’anima verde della Sardegna.</h1>
-        <p>Tra ulivi, vigne e il mare di Alghero.</p>
+      <motion.div
+        className="home-hero__content shell"
+        style={reduceMotion ? undefined : { y: copyY }}
+        initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.72, ease: MOTION.ease, delay: 0.35 }}
+      >
+        <p className="eyebrow eyebrow--light">Alghero · Sardegna</p>
+        <h1 id="home-hero-title">Relax autentico nell’anima verde della Sardegna.</h1>
+        <p className="home-hero__lead">Una tenuta tra ulivi e vigne, a pochi minuti dal mare di Alghero.</p>
+        <div className="hero-actions">
+          <BookingLink>Prenota il soggiorno</BookingLink>
+          <SiteLink className="button button--secondary button--light" href="/resort/">Scopri il resort</SiteLink>
+        </div>
       </motion.div>
-      <div className="arrival__side-note"><span>{CONTACT.coordinates}</span><span>Scorri per entrare</span></div>
+      <a className="home-hero__scroll" href="#intro"><span>Scopri</span><ChevronDown aria-hidden="true" size={18} /></a>
     </section>
   );
 }
 
-function FirstBreath() {
+function PropertyFacts() {
+  const facts = [
+    ['23 camere', 'spaziose e luminose'],
+    ['Piscina', 'aperta sul paesaggio'],
+    ['Ristorante', 'cucina sarda e forno a legna'],
+    ['3 km', 'dall’aeroporto di Alghero'],
+  ];
   return (
-    <section className="first-breath" aria-labelledby="first-breath-title">
-      <span className="chapter-label">01 / La tenuta</span>
-      <h2 id="first-breath-title">La campagna<span>cambia il tempo.</span></h2>
-      <div className="first-breath__copy">
-        <p>Villa Barbarina è immersa nella pianura della Nurra, tra cinque ettari di uliveti, vigne e prati. Qui il silenzio della campagna incontra camere luminose, cucina sarda e una piscina aperta sul paesaggio.</p>
-        <SiteLink className="text-link" href="/resort/">Entrare nella tenuta <ArrowRight aria-hidden="true" size={18} /></SiteLink>
+    <section className="property-facts shell" aria-label="Villa Barbarina in breve">
+      {facts.map(([title, detail]) => <div key={title}><strong>{title}</strong><span>{detail}</span></div>)}
+    </section>
+  );
+}
+
+function HomeIntroduction() {
+  return (
+    <>
+      <section className="intro-section shell" id="intro" aria-labelledby="intro-title">
+        <div className="section-kicker"><span>01</span><p>La tenuta</p></div>
+        <div className="intro-section__copy">
+          <h2 id="intro-title">Il ritmo quieto della campagna, vicino al mare.</h2>
+          <div>
+            <p>Villa Barbarina è immersa nella pianura della Nurra, tra cinque ettari di uliveti, vigne e prati. Qui l’ospitalità ha una scala intima: camere aperte sul verde, una grande piscina e una cucina legata alla terra.</p>
+            <TextLink href="/resort/">Conosci Villa Barbarina</TextLink>
+          </div>
+        </div>
+      </section>
+      <div className="shell intro-landscape">
+        <ImageReveal src="/images/villa/room-view.webp" alt="La piscina di Villa Barbarina vista da una terrazza privata" />
       </div>
-      <ImageReveal className="first-breath__portrait" src="/images/villa/pool-guest.webp" alt="Un momento di quiete sul bordo della piscina di Villa Barbarina" caption="La quiete non è un servizio. È il ritmo del luogo." />
-      <span className="first-breath__vertical" aria-hidden="true">NURRA</span>
-    </section>
+      <PropertyFacts />
+    </>
   );
 }
 
-function EstateFacts() {
-  const facts = [['05', 'ettari', 'Ulivi, vigne e prati'], ['23', 'camere', 'Aperte sul paesaggio'], ['03', 'km', 'Dall’aeroporto di Alghero'], ['01', 'tavola', 'Cucina sarda e forno a legna']];
+function ResortExperience() {
   return (
-    <section className="estate-facts" aria-label="Villa Barbarina in breve">
-      <span className="estate-facts__lead">Coordinate di soggiorno</span>
-      <div className="estate-facts__track">{facts.map(([number, unit, text]) => <div className="estate-fact" key={text}><strong>{number}</strong><span>{unit}</span><p>{text}</p></div>)}</div>
+    <section className="resort-experience section-space" aria-labelledby="resort-experience-title">
+      <div className="shell story-grid">
+        <ImageReveal className="story-grid__main" src="/images/villa/villa-exterior.webp" alt="Una camera di Villa Barbarina affacciata sul giardino" />
+        <div className="story-grid__content">
+          <div className="section-kicker"><span>02</span><p>Vivere la tenuta</p></div>
+          <h2 id="resort-experience-title">Cinque ettari per ritrovare il proprio tempo.</h2>
+          <p>La villa nasce da una storica tenuta agricola e conserva un rapporto diretto con la terra: nei materiali, nei sapori e nel silenzio che circonda ogni camera.</p>
+          <TextLink href="/resort/">Scopri Villa Barbarina</TextLink>
+          <ImageReveal className="story-grid__detail" src="/images/villa/pool-guest.webp" alt="Un momento di relax sul bordo della piscina" />
+        </div>
+      </div>
     </section>
   );
 }
 
-function EstateChapter() {
-  return (
-    <section className="estate-chapter" aria-labelledby="estate-title">
-      <div className="estate-chapter__ghost" aria-hidden="true">NATURA</div>
-      <div className="estate-chapter__copy"><span className="chapter-label chapter-label--light">02 / Il paesaggio</span><h2 id="estate-title">Non fa da sfondo. Fa parte del soggiorno.</h2><p>La villa nasce da una tenuta agricola e conserva un rapporto diretto con la terra: nei materiali, nella cucina e nella scala intima degli spazi.</p></div>
-      <ParallaxPhoto className="estate-chapter__wide" src="/images/villa/villa-exterior.webp" alt="Una camera di Villa Barbarina aperta sul giardino" />
-      <ImageReveal className="estate-chapter__detail" src="/images/villa/grounds.webp" alt="Vino, pane e ingredienti della tavola di Villa Barbarina" />
-      <p className="estate-chapter__note">Cinque ettari per scegliere ogni giorno tra il prato, la piscina e la costa.</p>
-    </section>
-  );
-}
-
-function RoomJourney({ compact = false }: { compact?: boolean }) {
+function RoomsExplorer({ compact = false }: { compact?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const reduceMotion = useReducedMotion();
   const activeRoom = rooms[activeIndex];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const nextIndex = Number((entry.target as HTMLElement).dataset.index);
-          if (!Number.isNaN(nextIndex)) setActiveIndex(nextIndex);
-        }
-      });
-    }, { rootMargin: '-44% 0px -44% 0px', threshold: 0.01 });
-    stepRefs.current.forEach((node) => node && observer.observe(node));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section className={`room-journey ${compact ? 'room-journey--compact' : ''}`}>
-      <div className="room-journey__stage">
-        <div className="room-journey__heading"><span className="chapter-label chapter-label--light">03 / Le camere</span><p>Quattro modi di abitare la quiete.</p></div>
-        <nav className="room-journey__index" aria-label="Tipologie di camera">{rooms.map((room, index) => <SiteLink href={room.slug} key={room.slug} className={index === activeIndex ? 'is-active' : ''} onMouseEnter={() => setActiveIndex(index)} onFocus={() => setActiveIndex(index)}><span>{String(index + 1).padStart(2, '0')}</span>{room.menuName}</SiteLink>)}</nav>
-        <div className="room-journey__title" aria-live="polite"><span>{activeRoom.lead}</span><motion.h2 key={activeRoom.slug} initial={reduceMotion ? false : { y: '105%' }} animate={{ y: 0 }} transition={{ duration: 0.55, ease: MOTION.ease }}>{activeRoom.menuName}</motion.h2></div>
-        <motion.figure className="room-journey__main-image" key={`${activeRoom.slug}-main`} initial={reduceMotion ? false : { clipPath: 'inset(100% 0 0 0)', scale: 1.04 }} animate={{ clipPath: 'inset(0% 0 0 0)', scale: 1 }} transition={{ duration: 0.7, ease: MOTION.ease }}><Photo src={activeRoom.primaryImage} alt={activeRoom.imageAlt} /></motion.figure>
-        <motion.figure className="room-journey__detail-image" key={`${activeRoom.slug}-detail`} initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.48, ease: MOTION.ease, delay: 0.08 }}><Photo src={activeRoom.secondaryImage} alt={`Dettaglio della ${activeRoom.menuName}`} /></motion.figure>
-        <div className="room-journey__meta"><span>{activeRoom.capacity}</span><span>{activeRoom.bed}</span><SiteLink href={activeRoom.slug}>Scopri <ArrowRight aria-hidden="true" size={17} /></SiteLink></div>
+    <section className={`rooms-section section-space ${compact ? 'rooms-section--compact' : ''}`} aria-labelledby="rooms-title">
+      <div className="shell">
+        {!compact ? (
+          <div className="section-heading">
+            <div className="section-kicker"><span>03</span><p>Le camere</p></div>
+            <div><h2 id="rooms-title">Spazio, luce e quiete.</h2><p>Quattro tipologie, tutte con il comfort essenziale e un rapporto diretto con il paesaggio.</p></div>
+          </div>
+        ) : <h2 className="sr-only" id="rooms-title">Le camere</h2>}
+        <div className="room-tabs" role="tablist" aria-label="Scegli una camera">
+          {rooms.map((room, index) => (
+            <button
+              key={room.slug}
+              type="button"
+              role="tab"
+              aria-selected={activeIndex === index}
+              className={activeIndex === index ? 'is-active' : ''}
+              onClick={() => setActiveIndex(index)}
+              onMouseEnter={() => setActiveIndex(index)}
+              onFocus={() => setActiveIndex(index)}
+            >
+              <span>{String(index + 1).padStart(2, '0')}</span>{room.menuName}
+            </button>
+          ))}
+        </div>
+        <div className="room-explorer">
+          <div className="room-explorer__media">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.figure
+                key={activeRoom.slug}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, clipPath: 'inset(0 0 8% 0)' }}
+                animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? MOTION.fast : 0.52, ease: MOTION.ease }}
+              >
+                <Photo src={activeRoom.primaryImage} alt={activeRoom.imageAlt} />
+              </motion.figure>
+            </AnimatePresence>
+          </div>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              className="room-explorer__content"
+              key={`${activeRoom.slug}-content`}
+              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: MOTION.normal, ease: MOTION.ease }}
+            >
+              <p className="eyebrow">{activeRoom.idealFor}</p>
+              <h3>{activeRoom.menuName}</h3>
+              <div className="room-explorer__facts"><span>{activeRoom.capacity}</span><span>{activeRoom.bed}</span></div>
+              <p>{activeRoom.description}</p>
+              <div className="room-explorer__actions">
+                <TextLink href={activeRoom.slug}>Scopri la camera</TextLink>
+                <BookingLink>Prenota</BookingLink>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="room-list-mobile">
+          {rooms.map((room) => (
+            <article key={room.slug}>
+              <ImageReveal src={room.primaryImage} alt={room.imageAlt} />
+              <div><p className="eyebrow">{room.capacity} · {room.bed}</p><h3>{room.menuName}</h3><p>{room.lead}</p><TextLink href={room.slug}>Scopri la camera</TextLink></div>
+            </article>
+          ))}
+        </div>
       </div>
-      <div className="room-journey__steps" aria-hidden="true">{rooms.map((room, index) => <div className="room-journey__step" data-index={index} key={room.slug} ref={(node) => { stepRefs.current[index] = node; }} />)}</div>
-      <div className="room-journey__mobile">{rooms.map((room, index) => <article key={room.slug}><span>{String(index + 1).padStart(2, '0')}</span><h2>{room.menuName}</h2><Photo src={room.primaryImage} alt={room.imageAlt} /><p>{room.lead}</p><div><span>{room.capacity}</span><span>{room.bed}</span></div><SiteLink className="text-link text-link--light" href={room.slug}>Entra nella camera <ArrowRight aria-hidden="true" size={18} /></SiteLink></article>)}</div>
     </section>
   );
 }
 
-function PhotographicInterruption() {
-  return <section className="photographic-break" aria-label="Villa Barbarina vista dall’alto"><ParallaxPhoto src="/images/villa/aerial.webp" alt="Vista aerea della piscina e del parco di Villa Barbarina" /><span>Terra / acqua / ombra</span></section>;
-}
-
-function DiningChapter() {
+function VisualPause() {
   return (
-    <section className="dining-chapter" aria-labelledby="dining-title">
-      <div className="dining-chapter__word" aria-hidden="true">RISTORANTE</div>
-      <span className="chapter-label chapter-label--light">04 / La tavola</span>
-      <div className="dining-chapter__copy"><h2 id="dining-title">La Sardegna arriva a tavola senza travestimenti.</h2><p>Pasta tirata a mano, carni locali, pesce del giorno, pizza cotta nel forno a legna e vini autoctoni. La cucina racconta la terra con gesti semplici e ingredienti scelti.</p><SiteLink className="text-link text-link--light" href="/ristorante/">Sedersi a tavola <ArrowRight aria-hidden="true" size={18} /></SiteLink></div>
-      <ImageReveal className="dining-chapter__main" src="/images/villa/crudo.webp" alt="Piatto di mare del ristorante di Villa Barbarina" />
-      <ParallaxPhoto className="dining-chapter__detail" src="/images/villa/pizza.webp" alt="Pizza preparata nel forno a legna" />
-      <span className="dining-chapter__caption">Ingredienti sardi, senza distanze.</span>
+    <section className="visual-pause shell-wide" aria-label="La piscina di Villa Barbarina vista dall’alto">
+      <ImageReveal src="/images/villa/aerial.webp" alt="Vista aerea della piscina e del parco di Villa Barbarina" />
     </section>
   );
 }
 
-function DestinationExplorer({ title = 'Fuori dalla tenuta, la Sardegna.' }) {
+function RestaurantFeature() {
+  return (
+    <section className="restaurant-feature section-space" aria-labelledby="restaurant-feature-title">
+      <div className="shell culinary-grid">
+        <ImageReveal className="culinary-grid__main" src="/images/villa/crudo.webp" alt="Selezione di piatti di mare del ristorante Villa Barbarina" />
+        <div className="culinary-grid__content">
+          <div className="section-kicker"><span>04</span><p>Il ristorante</p></div>
+          <h2 id="restaurant-feature-title">La Sardegna, servita con semplicità.</h2>
+          <p>Pasta tirata a mano, carni locali, pesce del giorno, pizza cotta nel forno a legna e vini autoctoni. Una cucina sincera, legata agli ingredienti e alle stagioni.</p>
+          <TextLink href="/ristorante/">Scopri il ristorante</TextLink>
+          <ImageReveal className="culinary-grid__detail" src="/images/villa/grounds.webp" alt="Vino, pane e ingredienti freschi del territorio" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DestinationExplorer({ compact = false }: { compact?: boolean }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeDestination = destinations[activeIndex];
   const reduceMotion = useReducedMotion();
+  const activeDestination = destinations[activeIndex];
+
   return (
-    <section className="destination-explorer" aria-labelledby="destination-title">
-      <div className="destination-explorer__intro"><span className="chapter-label">05 / Il territorio</span><h2 id="destination-title">{title}</h2><p>Campagna, città e costa possono appartenere alla stessa giornata.</p></div>
-      <div className="destination-explorer__desktop">
-        <div className="destination-explorer__list">{destinations.map((destination, index) => <button type="button" key={destination.name} className={index === activeIndex ? 'is-active' : ''} onMouseEnter={() => setActiveIndex(index)} onFocus={() => setActiveIndex(index)} onClick={() => setActiveIndex(index)}><span>{String(index + 1).padStart(2, '0')}</span><strong>{destination.name}</strong><small>{destination.distance}</small><ArrowRight aria-hidden="true" size={22} strokeWidth={1.4} /></button>)}</div>
-        <div className="destination-explorer__visual" aria-live="polite"><motion.figure key={activeDestination.name} initial={reduceMotion ? false : { clipPath: 'inset(0 100% 0 0)' }} animate={{ clipPath: 'inset(0 0% 0 0)' }} transition={{ duration: 0.65, ease: MOTION.ease }}><Photo src={activeDestination.image} alt={activeDestination.alt} /></motion.figure><p>{activeDestination.text}</p></div>
+    <section className={`destination-section section-space ${compact ? 'destination-section--compact' : ''}`} aria-labelledby="destination-title">
+      <div className="shell">
+        {!compact ? (
+          <div className="section-heading">
+            <div className="section-kicker"><span>05</span><p>Il territorio</p></div>
+            <div><h2 id="destination-title">Fuori dalla tenuta, la Sardegna.</h2><p>Campagna, città e costa possono appartenere alla stessa giornata.</p></div>
+          </div>
+        ) : <h2 className="sr-only" id="destination-title">Itinerari in Sardegna</h2>}
+        <div className="destination-explorer">
+          <div className="destination-explorer__media">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.figure
+                key={activeDestination.name}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reduceMotion ? MOTION.fast : 0.5, ease: MOTION.ease }}
+              >
+                <Photo src={activeDestination.image} alt={activeDestination.alt} />
+              </motion.figure>
+            </AnimatePresence>
+          </div>
+          <div className="destination-explorer__list">
+            {destinations.map((destination, index) => (
+              <button
+                key={destination.name}
+                type="button"
+                className={activeIndex === index ? 'is-active' : ''}
+                onMouseEnter={() => setActiveIndex(index)}
+                onFocus={() => setActiveIndex(index)}
+                onClick={() => setActiveIndex(index)}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <span><strong>{destination.name}</strong><small>{destination.distance}</small></span>
+                <ArrowRight aria-hidden="true" size={18} />
+              </button>
+            ))}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p key={activeDestination.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: MOTION.normal }}>
+                {activeDestination.text}
+              </motion.p>
+            </AnimatePresence>
+            <TextLink href="/itinerari/">Esplora gli itinerari</TextLink>
+          </div>
+        </div>
+        <div className="destination-list-mobile">
+          {destinations.map((destination, index) => (
+            <article key={destination.name}>
+              <ImageReveal src={destination.image} alt={destination.alt} />
+              <div><span>{String(index + 1).padStart(2, '0')}</span><h3>{destination.name}</h3><small>{destination.distance}</small><p>{destination.text}</p></div>
+            </article>
+          ))}
+        </div>
       </div>
-      <div className="destination-explorer__mobile">{destinations.map((destination, index) => <article key={destination.name}><span>{String(index + 1).padStart(2, '0')}</span><h3>{destination.name}</h3><small>{destination.distance}</small><Photo src={destination.image} alt={destination.alt} /><p>{destination.text}</p></article>)}</div>
     </section>
   );
 }
 
-function BookingScene({ title = 'La tua Sardegna comincia nella quiete.', copy = 'Prenota direttamente oppure raccontaci il soggiorno che hai in mente.' }: { title?: string; copy?: string }) {
+function LocationSection() {
   return (
-    <section className="booking-scene" aria-labelledby="booking-scene-title">
-      <figure><Photo src="/images/villa/night-exterior.webp" alt="Villa Barbarina illuminata nella quiete della sera" eager /></figure>
-      <div className="booking-scene__word" aria-hidden="true">ARRIVARE</div>
-      <div className="booking-scene__copy"><span className="chapter-label chapter-label--light">Il prossimo viaggio</span><h2 id="booking-scene-title">{title}</h2><p>{copy}</p><div><BookingLink>Verifica disponibilità</BookingLink><SiteLink className="text-link text-link--light" href="/contatti/">Scrivi allo staff <ArrowRight aria-hidden="true" size={18} /></SiteLink></div></div>
+    <section className="location-section section-space" aria-labelledby="location-title">
+      <div className="shell location-grid">
+        <div>
+          <p className="eyebrow">Dove siamo</p>
+          <h2 id="location-title">Nella Nurra, tra Alghero e la costa.</h2>
+          <p>Villa Barbarina si trova a Santa Maria La Palma, a 3 km dall’aeroporto e a circa 7 km dal centro storico di Alghero. L’auto è consigliata per esplorare liberamente spiagge e promontori.</p>
+          <a className="button button--secondary" href="https://maps.google.com/?q=40.6520027,8.2817193" target="_blank" rel="noreferrer">Apri in Google Maps</a>
+        </div>
+        <div className="location-details">
+          <MapPin aria-hidden="true" size={24} strokeWidth={1.5} />
+          <div><span>Indirizzo</span><strong>{CONTACT.address}</strong></div>
+          <div><span>Coordinate</span><strong>{CONTACT.coordinates}</strong></div>
+          <div><span>Contatti</span><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalBooking({ title = 'La tua Sardegna comincia nella quiete.' }: { title?: string }) {
+  return (
+    <section className="final-booking shell-wide" aria-labelledby="final-booking-title">
+      <Photo src="/images/villa/night-exterior.webp" alt="Villa Barbarina illuminata al tramonto" />
+      <div className="final-booking__content">
+        <p className="eyebrow eyebrow--light">Prenotazione diretta</p>
+        <h2 id="final-booking-title">{title}</h2>
+        <p>Verifica la disponibilità oppure contatta direttamente lo staff.</p>
+        <div><BookingLink>Prenota il soggiorno</BookingLink><a href={`mailto:${CONTACT.email}`} className="button button--secondary button--light">Scrivici</a></div>
+      </div>
     </section>
   );
 }
 
 function HomePage() {
-  return <main id="main-content"><HomeHero /><FirstBreath /><EstateFacts /><EstateChapter /><RoomJourney /><PhotographicInterruption /><DiningChapter /><DestinationExplorer /><BookingScene /></main>;
+  return (
+    <main id="main-content">
+      <HomeHero />
+      <HomeIntroduction />
+      <ResortExperience />
+      <RoomsExplorer />
+      <VisualPause />
+      <RestaurantFeature />
+      <DestinationExplorer />
+      <LocationSection />
+      <FinalBooking />
+    </main>
+  );
 }
 
-type CinematicHeroProps = { eyebrow: string; title: string; word: string; lead: string; image: string; imageAlt: string; tone?: 'mineral' | 'olive' | 'wine' };
+type PageHeroProps = { eyebrow: string; title: string; lead: string; image: string; imageAlt: string };
 
-function CinematicHero({ eyebrow, title, word, lead, image, imageAlt, tone = 'mineral' }: CinematicHeroProps) {
+function PageHero({ eyebrow, title, lead, image, imageAlt }: PageHeroProps) {
   const reduceMotion = useReducedMotion();
   return (
-    <section className={`cinematic-hero cinematic-hero--${tone}`}>
-      <div className="cinematic-hero__word" aria-hidden="true">{word}</div>
-      <motion.figure initial={reduceMotion ? false : { clipPath: 'inset(0 0 100% 0)' }} animate={{ clipPath: 'inset(0 0 0% 0)' }} transition={{ duration: 1.05, ease: MOTION.ease, delay: 0.15 }}><Photo src={image} alt={imageAlt} eager /></motion.figure>
-      <motion.div className="cinematic-hero__copy" initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: MOTION.ease, delay: 0.45 }}><span className="chapter-label">{eyebrow}</span><h1>{title}</h1><p>{lead}</p></motion.div>
+    <section className="page-hero" aria-labelledby="page-hero-title">
+      <motion.figure initial={reduceMotion ? false : { opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.95, ease: MOTION.ease }}>
+        <Photo src={image} alt={imageAlt} eager />
+      </motion.figure>
+      <motion.div className="page-hero__content shell" initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: MOTION.ease, delay: 0.25 }}>
+        <p className="eyebrow eyebrow--light">{eyebrow}</p><h1 id="page-hero-title">{title}</h1><p>{lead}</p>
+      </motion.div>
     </section>
   );
 }
@@ -420,49 +617,106 @@ function CinematicHero({ eyebrow, title, word, lead, image, imageAlt, tone = 'mi
 function ResortPage() {
   return (
     <main id="main-content">
-      <CinematicHero eyebrow="Villa Barbarina / La tenuta" title="Il paesaggio non fa da sfondo. È parte del soggiorno." word="NURRA" lead="Una storica tenuta agricola nella pianura della Nurra, trasformata in un resort dove natura, ospitalità e cucina condividono lo stesso ritmo." image="/images/villa/villa-exterior.webp" imageAlt="Una camera di Villa Barbarina affacciata sulla tenuta" tone="olive" />
-      <section className="estate-story" aria-labelledby="estate-story-title">
-        <div className="estate-story__opening"><span className="chapter-label">01 / Origine</span><h2 id="estate-story-title">Cinque ettari per rallentare.</h2><p>Ulivi secolari, vigne, prati curati e il profumo della macchia mediterranea circondano le camere. La Riviera del Corallo resta vicina, ma qui il rumore si ferma alla soglia.</p></div>
-        <ImageReveal className="estate-story__image-a" src="/images/villa/olive-grove.webp" alt="La piscina di Villa Barbarina aperta sul cielo della Nurra" />
-        <ParallaxPhoto className="estate-story__image-b" src="/images/villa/reception.webp" alt="La reception di Villa Barbarina" />
-        <blockquote>La terra resta visibile nei materiali, nella cucina e nella scala intima degli spazi.</blockquote>
-      </section>
-      <section className="day-notation" aria-labelledby="day-title"><h2 id="day-title">Una giornata, tre ritmi.</h2><div><article><span>07:30</span><h3>La luce sulla veranda</h3><p>Colazione, frutta fresca e tempo per decidere.</p></article><article><span>12:00</span><h3>Il prato o la costa</h3><p>Restare nella tenuta o raggiungere il mare in pochi minuti.</p></article><article><span>20:00</span><h3>La tavola e il cielo</h3><p>Cucina sarda, poi il silenzio della campagna.</p></article></div></section>
-      <PhotographicInterruption />
-      <BookingScene title="Una base quieta per incontrare la Sardegna." copy="Scegli la camera e prenota direttamente, oppure contattaci per un soggiorno su misura." />
+      <PageHero eyebrow="Villa Barbarina · Il resort" title="Una tenuta da vivere con naturalezza." lead="Cinque ettari di verde, una grande piscina e il silenzio della campagna a pochi minuti da Alghero." image="/images/villa/resort-pool.webp" imageAlt="La piscina e gli edifici di Villa Barbarina" />
+      <section className="page-intro shell section-space"><div className="section-kicker"><span>01</span><p>La storia</p></div><div><h2>Il paesaggio è parte del soggiorno.</h2><p>Villa Barbarina nasce da una storica tenuta agricola nella pianura della Nurra. Ulivi, vigne e prati circondano camere luminose, spazi raccolti e una piscina aperta sul verde.</p></div></section>
+      <section className="balanced-story shell section-space"><ImageReveal src="/images/villa/villa-exterior.webp" alt="Le camere di Villa Barbarina affacciate sul giardino" /><div><p className="eyebrow">Ospitalità</p><h2>Intima, semplice, attenta.</h2><p>La scala contenuta del resort permette di vivere gli spazi senza fretta. Le terrazze private, i materiali naturali e il rapporto diretto con lo staff rendono ogni soggiorno personale.</p><TextLink href="/camere/">Scopri le camere</TextLink></div></section>
+      <PropertyFacts />
+      <section className="balanced-story balanced-story--reverse shell section-space"><ImageReveal src="/images/villa/pool-guest.webp" alt="Ospite in relax sul bordo della piscina" /><div><p className="eyebrow">Il ritmo del giorno</p><h2>Dalla colazione al tramonto.</h2><p>Una mattina lenta, il prato, la piscina, una giornata sulla costa e il rientro a tavola. La posizione della tenuta lascia libertà di scegliere ogni giorno.</p><TextLink href="/itinerari/">Esplora il territorio</TextLink></div></section>
+      <FinalBooking />
     </main>
   );
 }
 
 function RoomsPage() {
-  return <main id="main-content"><CinematicHero eyebrow="Villa Barbarina / Le camere" title="Ventitré camere. Nessuna separata dal paesaggio." word="CAMERE" lead="Legno su misura, tessuti naturali, terrazze e verande private: ogni stanza interpreta il carattere della tenuta con una misura diversa." image="/images/villa/room-view.webp" imageAlt="Camera di Villa Barbarina affacciata sulla piscina" /><section className="rooms-prologue"><span>Spazi diversi / stessa quiete</span><p>Tutte le camere dispongono di aria condizionata, TV LCD, minibar, cassaforte e bagno privato con doccia in cristallo.</p></section><RoomJourney compact /><BookingScene /></main>;
+  return (
+    <main id="main-content">
+      <PageHero eyebrow="Villa Barbarina · Le camere" title="Camere aperte sulla quiete." lead="Spazi luminosi, arredi artigianali e terrazze private affacciate sulla tenuta." image="/images/villa/room-view.webp" imageAlt="Vista della piscina dalla terrazza di una camera" />
+      <section className="page-intro shell section-space"><div className="section-kicker"><span>01</span><p>Scegli la camera</p></div><div><h2>Quattro tipologie, lo stesso senso di calma.</h2><p>Tutte le camere dispongono di aria condizionata, TV LCD, minibar, cassaforte e bagno privato con doccia in cristallo.</p></div></section>
+      <RoomsExplorer compact />
+      <FinalBooking title="Scegli lo spazio giusto per il tuo soggiorno." />
+    </main>
+  );
 }
 
 type GalleryImage = { src: string; alt: string };
 
-function EditorialGallery({ images }: { images: GalleryImage[] }) {
-  const [activeImage, setActiveImage] = useState<GalleryImage | null>(null);
+function Gallery({ images }: { images: GalleryImage[] }) {
+  const [selected, setSelected] = useState<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
-    if (!activeImage) return;
+    if (selected === null) return undefined;
     document.body.style.overflow = 'hidden';
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setActiveImage(null); };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelected(null);
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        closeButtonRef.current?.focus();
+      }
+    };
     window.addEventListener('keydown', onKeyDown);
-    return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKeyDown); };
-  }, [activeImage]);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [selected]);
+
   return (
-    <><div className="editorial-gallery">{images.map((image, index) => <button type="button" key={`${image.src}-${index}`} onClick={() => setActiveImage(image)} aria-label={`Apri immagine: ${image.alt}`}><Photo src={image.src} alt={image.alt} /><span>Apri</span></button>)}</div>{activeImage ? <div className="lightbox" role="dialog" aria-modal="true" aria-label="Galleria fotografica"><button type="button" autoFocus onClick={() => setActiveImage(null)} aria-label="Chiudi immagine"><X aria-hidden="true" /></button><Photo src={activeImage.src} alt={activeImage.alt} eager /><p>{activeImage.alt}</p></div> : null}</>
+    <>
+      <div className="gallery-grid">
+        {images.map((image, index) => (
+          <button type="button" key={`${image.src}-${index}`} onClick={() => setSelected(index)} aria-label={`Apri immagine ${index + 1}`}>
+            <Photo src={image.src} alt={image.alt} />
+          </button>
+        ))}
+      </div>
+      <AnimatePresence>
+        {selected !== null ? (
+          <motion.div className="lightbox" role="dialog" aria-modal="true" aria-label="Galleria fotografica" onClick={(event) => { if (event.target === event.currentTarget) setSelected(null); }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <button ref={closeButtonRef} type="button" className="lightbox__close" onClick={() => setSelected(null)} aria-label="Chiudi galleria" autoFocus><X aria-hidden="true" /></button>
+            <motion.figure initial={{ opacity: 0, scale: 0.985 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: MOTION.normal, ease: MOTION.ease }}><Photo src={images[selected].src} alt={images[selected].alt} eager /></motion.figure>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function RoomHero({ room }: { room: Room }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <section className="room-hero" aria-labelledby="room-hero-title">
+      <div className="shell room-hero__grid">
+        <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.68, ease: MOTION.ease, delay: 0.15 }}>
+          <p className="eyebrow">Villa Barbarina · Le camere</p>
+          <h1 id="room-hero-title">{room.name}</h1>
+          <p>{room.lead}</p>
+          <BookingLink>Prenota questa camera</BookingLink>
+        </motion.div>
+        <motion.figure initial={reduceMotion ? false : { opacity: 0, clipPath: 'inset(6% 0 0 0)', scale: 1.02 }} animate={{ opacity: 1, clipPath: 'inset(0% 0 0 0)', scale: 1 }} transition={{ duration: 0.9, ease: MOTION.ease }}>
+          <Photo src={room.primaryImage} alt={room.imageAlt} eager />
+        </motion.figure>
+      </div>
+    </section>
   );
 }
 
 function RoomPage({ room }: { room: Room }) {
+  const gallery = [
+    { src: room.primaryImage, alt: room.imageAlt },
+    { src: room.secondaryImage, alt: `Bagno della ${room.menuName}` },
+    { src: '/images/villa/room-pool.webp', alt: 'Camera affacciata sulla piscina' },
+    { src: '/images/villa/terrace-aperitivo.webp', alt: 'Terrazza privata affacciata sul verde' },
+  ];
   return (
     <main id="main-content">
-      <section className="room-hero"><div className="room-hero__index">{String(rooms.indexOf(room) + 1).padStart(2, '0')} / 04</div><h1>{room.name}</h1><figure><Photo src={room.primaryImage} alt={room.imageAlt} eager /></figure><p>{room.lead}</p><div className="room-hero__facts"><span>{room.capacity}</span><span>{room.bed}</span><span>{room.idealFor}</span></div></section>
-      <section className="room-story" aria-labelledby="room-story-title"><div><span className="chapter-label">Dentro la camera</span><h2 id="room-story-title">Comfort e atmosfera</h2><p>{room.description}</p><p>{room.detail}</p></div><ImageReveal src={room.secondaryImage} alt={`Bagno della ${room.menuName}`} /><ParallaxPhoto src="/images/villa/terrace-aperitivo.webp" alt="Terrazza privata affacciata sul verde" /></section>
-      <section className="amenities" aria-labelledby="amenities-title"><h2 id="amenities-title">In camera</h2><ul>{room.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></section>
-      <section className="room-gallery-section" aria-labelledby="gallery-title"><span className="chapter-label">Dettagli / luce / materia</span><h2 id="gallery-title">La camera, senza fretta.</h2><EditorialGallery images={[{ src: room.primaryImage, alt: room.imageAlt }, { src: room.secondaryImage, alt: `Bagno della ${room.menuName}` }, { src: '/images/villa/room-view.webp', alt: 'La vista dalla camera verso la piscina' }, { src: '/images/villa/villa-exterior.webp', alt: 'La terrazza immersa nel verde della tenuta' }]} /></section>
-      <section className="next-rooms" aria-label="Altre camere"><span>Continua a esplorare</span>{rooms.filter((candidate) => candidate.slug !== room.slug).map((candidate) => <SiteLink href={candidate.slug} key={candidate.slug}>{candidate.menuName}<ArrowRight aria-hidden="true" size={20} /></SiteLink>)}</section>
-      <BookingScene title="Ritrova il tempo della camera." copy="Verifica la disponibilità oppure chiedi allo staff la soluzione più adatta al tuo soggiorno." />
+      <RoomHero room={room} />
+      <section className="room-summary shell"><div><span>Ospiti</span><strong>{room.capacity}</strong></div><div><span>Letto</span><strong>{room.bed}</strong></div><div><span>Ideale per</span><strong>{room.idealFor}</strong></div><BookingLink>Prenota questa camera</BookingLink></section>
+      <section className="room-overview shell section-space"><div><p className="eyebrow">La camera</p><h2>{room.lead}</h2><p>{room.description}</p><p>{room.detail}</p><BookingLink>Verifica disponibilità</BookingLink></div><ImageReveal src={room.secondaryImage} alt={`Bagno e dettagli della ${room.menuName}`} /></section>
+      <section className="amenities shell section-space" aria-labelledby="amenities-title"><div><p className="eyebrow">Comfort</p><h2 id="amenities-title">Tutto ciò che serve.</h2></div><ul>{room.features.map((feature) => <li key={feature}><span aria-hidden="true" />{feature}</li>)}</ul></section>
+      <section className="room-gallery shell section-space" aria-labelledby="gallery-title"><div className="section-heading"><div className="section-kicker"><span>02</span><p>Galleria</p></div><div><h2 id="gallery-title">Guarda la camera.</h2><p>Spazi, dettagli e il rapporto con l’esterno.</p></div></div><Gallery images={gallery} /></section>
+      <section className="next-rooms shell"><p>Scopri anche</p>{rooms.filter((candidate) => candidate.slug !== room.slug).map((candidate) => <SiteLink href={candidate.slug} key={candidate.slug}>{candidate.menuName}<ArrowRight aria-hidden="true" size={18} /></SiteLink>)}</section>
+      <FinalBooking />
     </main>
   );
 }
@@ -470,25 +724,41 @@ function RoomPage({ room }: { room: Room }) {
 function RestaurantPage() {
   return (
     <main id="main-content">
-      <CinematicHero eyebrow="Villa Barbarina / La tavola" title="La cucina sarda, servita nel luogo da cui nasce." word="TAVOLA" lead="Ingredienti freschi, ricette della tradizione, pizza cotta nel forno a legna e vini autoctoni: la tavola completa il racconto della tenuta." image="/images/villa/crudo.webp" imageAlt="Piatto del ristorante di Villa Barbarina" tone="wine" />
-      <section className="food-editorial" aria-labelledby="food-editorial-title"><div className="food-editorial__copy"><span className="chapter-label chapter-label--light">01 / Materia prima</span><h2 id="food-editorial-title">Sapori autentici, gesti contemporanei.</h2><p>Pane carasau, pasta tirata a mano, carni locali cotte lentamente e pesce del giorno raccontano la Sardegna più vera. I dolci preparati ogni mattina e la selezione di Vermentino e Cannonau chiudono il cerchio.</p></div><ImageReveal className="food-editorial__wine" src="/images/villa/wines.webp" alt="Vini sardi selezionati dal ristorante" /><ParallaxPhoto className="food-editorial__table" src="/images/villa/restaurant.webp" alt="La tavola di Villa Barbarina" /><ImageReveal className="food-editorial__pizza" src="/images/villa/pizza.webp" alt="Pizza cotta nel forno a legna" /><div className="food-editorial__note"><span>La sera</span><h3>Il forno a legna.</h3><p>Un impasto leggero incontra pomodorini, basilico, formaggi locali e olio extravergine.</p></div></section>
-      <section className="restaurant-practical"><p>Il ristorante accoglie gli ospiti in sala o all’aperto. Per orari, eventi e richieste particolari, contatta direttamente la struttura.</p><a className="text-link text-link--light" href={CONTACT.phoneHref}>Chiama il ristorante <ArrowRight aria-hidden="true" size={18} /></a></section>
-      <BookingScene title="Dormire qui significa anche assaggiare qui." copy="Prenota il soggiorno o scrivici per informazioni sul ristorante e sugli eventi." />
+      <PageHero eyebrow="Villa Barbarina · Il ristorante" title="La cucina sarda, nel luogo da cui nasce." lead="Ingredienti freschi, ricette della tradizione, pizza nel forno a legna e vini del territorio." image="/images/villa/crudo.webp" imageAlt="Piatto di mare del ristorante Villa Barbarina" />
+      <section className="page-intro shell section-space"><div className="section-kicker"><span>01</span><p>La tavola</p></div><div><h2>Sapori riconoscibili, ingredienti scelti.</h2><p>Il ristorante accompagna il soggiorno con una cucina semplice e generosa: pasta fatta a mano, carni locali, pesce del giorno e specialità preparate nel forno a legna.</p></div></section>
+      <section className="balanced-story shell section-space"><ImageReveal src="/images/villa/grounds.webp" alt="Vino, pane e ingredienti freschi" /><div><p className="eyebrow">Il territorio nel piatto</p><h2>La materia prima viene prima di tutto.</h2><p>Le ricette sarde incontrano prodotti stagionali, vini autoctoni e una sala affacciata sul verde della tenuta.</p><a className="button button--secondary" href={`mailto:${CONTACT.email}`}>Contatta il ristorante</a></div></section>
+      <section className="food-gallery shell"><ImageReveal src="/images/villa/pizza.webp" alt="Pizza cotta nel forno a legna" /><ImageReveal src="/images/villa/wines.webp" alt="Selezione di vini del territorio" /><ImageReveal src="/images/villa/breakfast.webp" alt="Colazione di Villa Barbarina" /></section>
+      <section className="practical-strip shell"><div><span>Colazione</span><strong>Ogni mattina per gli ospiti</strong></div><div><span>Cucina</span><strong>Tradizione sarda e forno a legna</strong></div><div><span>Informazioni</span><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a></div></section>
+      <FinalBooking title="Il soggiorno continua a tavola." />
     </main>
   );
 }
 
 function ItinerariesPage() {
-  return <main id="main-content"><CinematicHero eyebrow="Villa Barbarina / Dintorni" title="Ogni strada parte dalla Nurra." word="SARDEGNA" lead="Mare, scogliere, torri e città: Villa Barbarina resta al centro di un territorio che cambia volto in pochi chilometri." image="/images/villa/capo-caccia.webp" imageAlt="Torre e paesaggio costiero vicino ad Alghero" tone="olive" /><DestinationExplorer title="Un atlante per giornate senza fretta." /><section className="map-strip"><MapPin aria-hidden="true" size={24} strokeWidth={1.4} /><div><strong>{CONTACT.coordinates}</strong><span>{CONTACT.address}</span></div><a className="text-link text-link--light" href="https://maps.google.com/?q=40.6520027,8.2817193" target="_blank" rel="noreferrer">Apri la mappa <ArrowRight aria-hidden="true" size={18} /></a></section><BookingScene /></main>;
+  return (
+    <main id="main-content">
+      <PageHero eyebrow="Villa Barbarina · Il territorio" title="Ogni strada parte dalla Nurra." lead="Mare, scogliere, torri e città: paesaggi diversi a pochi chilometri dalla tenuta." image="/images/villa/capo-caccia.webp" imageAlt="Le scogliere e la torre di Capo Caccia" />
+      <section className="page-intro shell section-space"><div className="section-kicker"><span>01</span><p>Esplorare</p></div><div><h2>Una posizione, molte Sardegne.</h2><p>Dal centro storico di Alghero alle spiagge della Riviera del Corallo, Villa Barbarina è un punto di partenza tranquillo per giornate sempre diverse.</p></div></section>
+      <DestinationExplorer compact />
+      <LocationSection />
+      <FinalBooking />
+    </main>
+  );
 }
 
 function ExtrasPage() {
+  const services = [
+    ['Arrivare', 'Informazioni e transfer su richiesta.'],
+    ['Celebrare', 'Matrimoni, eventi privati e incontri aziendali.'],
+    ['Esplorare', 'Indicazioni per spiagge, città ed esperienze nel territorio.'],
+  ];
   return (
     <main id="main-content">
-      <CinematicHero eyebrow="Villa Barbarina / Su richiesta" title="Il soggiorno può continuare oltre la camera." word="TEMPO" lead="Transfer, momenti speciali ed esperienze nel territorio vengono organizzati su richiesta, a partire dalle esigenze reali del tuo viaggio." image="/images/villa/terrace-aperitivo.webp" imageAlt="Aperitivo sulla terrazza di una camera" />
-      <section className="extras-manifesto" aria-labelledby="extras-title"><div><span className="chapter-label">Parliamone</span><h2 id="extras-title">Raccontaci cosa vuoi vivere.</h2><p>La disponibilità dei servizi varia in base al periodo e al tipo di soggiorno. Lo staff può aiutarti senza trasformare la vacanza in un pacchetto predefinito.</p></div><div className="extras-manifesto__list"><article><span>01</span><h3>Arrivare</h3><p>Informazioni e transfer su richiesta.</p></article><article><span>02</span><h3>Celebrare</h3><p>Matrimoni, eventi privati e incontri aziendali.</p></article><article><span>03</span><h3>Esplorare</h3><p>Indicazioni per spiagge, città e territorio.</p></article></div></section>
-      <section className="smartness" aria-labelledby="smartness-title"><div><span className="chapter-label chapter-label--light">Catalogo esperienze</span><h2 id="smartness-title">Scegli, poi chiedi allo staff.</h2><p>Consulta le proposte disponibili nel marketplace ufficiale Villa Barbarina.</p><a className="text-link text-link--light" href={SMARTNESS_URL} target="_blank" rel="noreferrer">Apri in una nuova scheda <ArrowRight aria-hidden="true" size={18} /></a></div><iframe src={SMARTNESS_URL} title="Marketplace esperienze Villa Barbarina" loading="lazy" /></section>
-      <BookingScene />
+      <PageHero eyebrow="Villa Barbarina · Servizi" title="Un soggiorno costruito intorno a te." lead="Transfer, momenti speciali ed esperienze vengono organizzati su richiesta insieme allo staff." image="/images/villa/terrace-aperitivo.webp" imageAlt="Aperitivo su una terrazza di Villa Barbarina" />
+      <section className="page-intro shell section-space"><div className="section-kicker"><span>01</span><p>Su richiesta</p></div><div><h2>Raccontaci cosa vuoi vivere.</h2><p>La disponibilità dei servizi varia in base al periodo e al tipo di soggiorno. Lo staff può aiutarti senza trasformare la vacanza in un pacchetto predefinito.</p></div></section>
+      <section className="service-ledger shell">{services.map(([title, copy], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><h2>{title}</h2><p>{copy}</p></article>)}</section>
+      <section className="marketplace shell section-space" aria-labelledby="marketplace-title"><div><p className="eyebrow">Catalogo esperienze</p><h2 id="marketplace-title">Consulta le proposte disponibili.</h2><p>Apri il marketplace ufficiale Villa Barbarina e contatta lo staff per organizzare i dettagli.</p><a className="button button--primary" href={SMARTNESS_URL} target="_blank" rel="noreferrer">Apri il marketplace <ArrowRight aria-hidden="true" size={17} /></a></div><iframe src={SMARTNESS_URL} title="Marketplace esperienze Villa Barbarina" loading="lazy" /></section>
+      <FinalBooking />
     </main>
   );
 }
@@ -496,7 +766,7 @@ function ExtrasPage() {
 function InquiryForm() {
   const [submitting, setSubmitting] = useState(false);
   const [childrenCount, setChildrenCount] = useState(0);
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const [today] = useState(() => new Date().toISOString().slice(0, 10));
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     const arrival = form.elements.namedItem('Garrivo') as HTMLInputElement;
@@ -521,7 +791,8 @@ function InquiryForm() {
       <label className="form-row"><span>Trattamento</span><select name="trattamento" defaultValue="Camera e Colazione"><option>Solo Pernottamento</option><option>Camera e Colazione</option><option>Mezza Pensione</option></select></label>
       <label className="form-row"><span>Note</span><textarea name="Note" rows={5} /></label>
       <label className="privacy-check"><input name="privacy" type="checkbox" value="1" required /><span>Autorizzo il trattamento dei dati personali e dichiaro di aver letto la <a href="https://www.villabarbarina.com/servizi/privacy-policy-29" target="_blank" rel="noreferrer">privacy policy</a>.</span></label>
-      <button className="form-submit" type="submit" disabled={submitting}>{submitting ? 'Apertura in corso…' : 'Invia la richiesta'}<ArrowRight aria-hidden="true" size={18} /></button><p className="form-note">L’invio apre la conferma del sito ufficiale in una nuova scheda.</p>
+      <button className="button button--primary form-submit" type="submit" disabled={submitting}>{submitting ? 'Apertura in corso…' : 'Invia la richiesta'}<ArrowRight aria-hidden="true" size={17} /></button>
+      <p className="form-note">L’invio apre la conferma del sito ufficiale in una nuova scheda.</p>
     </form>
   );
 }
@@ -529,31 +800,32 @@ function InquiryForm() {
 function ContactPage() {
   return (
     <main id="main-content">
-      <section className="contact-opening"><span className="chapter-label">Villa Barbarina / Contatti</span><h1>Parliamo prima di arrivare.</h1><figure><Photo src="/images/villa/room-pool.webp" alt="La quiete della piscina vista dalla camera" eager /></figure><p>Per disponibilità, preventivi personalizzati, ristorante o richieste speciali, scrivi direttamente allo staff.</p></section>
-      <section className="contact-ledger" aria-label="Recapiti"><a href={CONTACT.phoneHref}><span>Telefono</span><strong>{CONTACT.phoneLabel}</strong><Phone aria-hidden="true" /></a><a href={`mailto:${CONTACT.email}`}><span>Email</span><strong>{CONTACT.email}</strong><Mail aria-hidden="true" /></a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>331 410 6025</strong><MessageCircle aria-hidden="true" /></a><a href="https://maps.google.com/?q=40.6520027,8.2817193" target="_blank" rel="noreferrer"><span>Come arrivare</span><strong>{CONTACT.address}</strong><MapPin aria-hidden="true" /></a></section>
-      <section className="contact-workspace"><div><span className="chapter-label">Richiesta diretta</span><h2>Raccontaci il soggiorno.</h2><InquiryForm /></div><aside aria-labelledby="faq-title"><span className="chapter-label">Informazioni utili</span><h2 id="faq-title">Prima di partire</h2><div className="faq-list">{faqs.map((faq) => <details key={faq.question}><summary><span>{faq.question}</span><ChevronDown aria-hidden="true" size={19} /></summary><p>{faq.answer}</p></details>)}</div></aside></section>
+      <PageHero eyebrow="Villa Barbarina · Contatti" title="Siamo qui per aiutarti a partire." lead="Disponibilità, soggiorni personalizzati, ristorante e richieste speciali: parla direttamente con lo staff." image="/images/villa/room-pool.webp" imageAlt="Camera di Villa Barbarina affacciata sulla piscina" />
+      <section className="contact-ledger shell"><a href={CONTACT.phoneHref}><Phone aria-hidden="true" /><span>Telefono</span><strong>{CONTACT.phoneLabel}</strong></a><a href={`mailto:${CONTACT.email}`}><Mail aria-hidden="true" /><span>Email</span><strong>{CONTACT.email}</strong></a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" /><span>WhatsApp</span><strong>331 410 6025</strong></a><a href="https://maps.google.com/?q=40.6520027,8.2817193" target="_blank" rel="noreferrer"><MapPin aria-hidden="true" /><span>Come arrivare</span><strong>Apri la mappa</strong></a></section>
+      <section className="contact-workspace shell section-space"><div><p className="eyebrow">Richiesta diretta</p><h2>Raccontaci il soggiorno.</h2><InquiryForm /></div><aside aria-labelledby="faq-title"><p className="eyebrow">Informazioni utili</p><h2 id="faq-title">Prima di partire.</h2><div className="faq-list">{faqs.map((faq) => <details key={faq.question}><summary><span>{faq.question}</span><ChevronDown aria-hidden="true" size={18} /></summary><p>{faq.answer}</p></details>)}</div></aside></section>
     </main>
   );
 }
 
 function NotFoundPage() {
-  return <main id="main-content" className="not-found"><span className="chapter-label">404 / Sentiero interrotto</span><h1>Questa pagina non conduce alla tenuta.</h1><SiteLink className="booking-link" href="/"><span>Torna alla home</span><ArrowRight aria-hidden="true" size={18} /></SiteLink></main>;
+  return <main id="main-content" className="not-found"><p className="eyebrow">404</p><h1>Questa pagina non conduce alla tenuta.</h1><SiteLink className="button button--primary" href="/">Torna alla home</SiteLink></main>;
 }
 
 function Footer() {
   return (
     <footer className="site-footer">
-      <div className="site-footer__name" aria-hidden="true"><span>VILLA</span><strong>BARBARINA</strong></div>
-      <div className="site-footer__lead"><p>La campagna di Alghero.<br />Il mare a pochi minuti.</p><BookingLink>Verifica disponibilità</BookingLink></div>
-      <nav className="site-footer__nav" aria-label="Navigazione piè di pagina">{navigation.map((item) => <SiteLink key={item.href} href={item.href}>{item.label}</SiteLink>)}<SiteLink href="/servizi-extra/">Servizi extra</SiteLink></nav>
-      <address className="site-footer__contact"><span>{CONTACT.address}</span><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><a href={`mailto:${CONTACT.pec}`}>PEC: {CONTACT.pec}</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a></address>
-      <div className="site-footer__legal"><span>© {new Date().getFullYear()} {LEGAL.company}</span><span>P.IVA / CF {LEGAL.vat} · REA {LEGAL.rea}</span><span>Capitale {LEGAL.capital} · Costituzione {LEGAL.established}</span><span>CIR {LEGAL.cir} · CIN {LEGAL.cin}</span><a href="https://www.villabarbarina.com/servizi/privacy-policy-29" target="_blank" rel="noreferrer">Privacy</a><a href="https://www.villabarbarina.com/servizi/cookie-policy-31" target="_blank" rel="noreferrer">Cookie</a></div>
+      <div className="shell footer-grid">
+        <div className="footer-brand"><SiteLink href="/" className="wordmark wordmark--footer"><span>Villa</span><strong>Barbarina</strong><small>Nature Resort · Alghero</small></SiteLink><p>Una tenuta nella campagna di Alghero, tra ulivi, vigne e il mare della Sardegna.</p><BookingLink>Prenota il soggiorno</BookingLink></div>
+        <nav aria-label="Navigazione piè di pagina">{navigation.map((item) => <SiteLink key={item.href} href={item.href}>{item.label}</SiteLink>)}</nav>
+        <address><span>{CONTACT.address}</span><a href={CONTACT.phoneHref}>{CONTACT.phoneLabel}</a><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp</a><a href="https://www.villabarbarina.com/en/">IT / EN</a></address>
+      </div>
+      <div className="shell footer-legal"><span>© {new Date().getFullYear()} {LEGAL.company}</span><span>P.IVA / CF {LEGAL.vat} · REA {LEGAL.rea}</span><span>CIR {LEGAL.cir} · CIN {LEGAL.cin}</span><a href="https://www.villabarbarina.com/servizi/privacy-policy-29" target="_blank" rel="noreferrer">Privacy</a><a href="https://www.villabarbarina.com/servizi/cookie-policy-31" target="_blank" rel="noreferrer">Cookie</a></div>
     </footer>
   );
 }
 
 function MobileDock() {
-  return <nav className="mobile-dock" aria-label="Contatti rapidi"><a href={CONTACT.phoneHref}><Phone aria-hidden="true" size={17} /><span>Chiama</span></a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" size={17} /><span>WhatsApp</span></a><a href={BOOKING_URL} target="_blank" rel="noreferrer"><ArrowDownRight aria-hidden="true" size={17} /><span>Prenota</span></a></nav>;
+  return <nav className="mobile-dock" aria-label="Contatti rapidi"><a href={CONTACT.phoneHref}><Phone aria-hidden="true" size={17} /><span>Chiama</span></a><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" size={17} /><span>WhatsApp</span></a><a href={BOOKING_URL} target="_blank" rel="noreferrer"><ArrowRight aria-hidden="true" size={17} /><span>Prenota</span></a></nav>;
 }
 
 function resolvePage(pathname: string): ReactNode {
@@ -573,13 +845,24 @@ function resolvePage(pathname: string): ReactNode {
 
 export default function App() {
   const pathname = usePathname();
-  const page = useMemo(() => resolvePage(pathname), [pathname]);
+  const page = resolvePage(pathname);
+
   useEffect(() => {
     const room = rooms.find((candidate) => candidate.slug === pathname);
-    const meta = room ? { title: `${room.menuName} | Villa Barbarina Nature Resort`, description: room.description } : pageMeta[pathname] ?? { title: 'Pagina non trovata | Villa Barbarina', description: 'La pagina richiesta non è disponibile.' };
+    const meta = room
+      ? { title: `${room.menuName} | Villa Barbarina Nature Resort`, description: room.description }
+      : pageMeta[pathname] ?? { title: 'Pagina non trovata | Villa Barbarina', description: 'La pagina richiesta non è disponibile.' };
     document.title = meta.title;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', meta.description);
     document.body.dataset.route = pathname === '/' ? 'home' : 'inner';
   }, [pathname]);
-  return <><Header pathname={pathname} />{page}<Footer /><MobileDock /></>;
+
+  return (
+    <>
+      <Header pathname={pathname} />
+      <motion.div id="app-content" key={pathname} initial={{ opacity: 0.985 }} animate={{ opacity: 1 }} transition={{ duration: MOTION.fast }}>{page}</motion.div>
+      <Footer />
+      <MobileDock />
+    </>
+  );
 }

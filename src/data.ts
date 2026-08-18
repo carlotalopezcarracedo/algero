@@ -3,9 +3,6 @@ export const BOOKING_URL =
 
 export const WHATSAPP_URL = 'https://wa.me/3314106025';
 
-export const SMARTNESS_URL =
-  'https://commerce.smartness.com/hotelvillabarbarinaalghero';
-
 export const CONTACT = {
   phoneLabel: '079 999 9026',
   phoneHref: 'tel:+390799999026',

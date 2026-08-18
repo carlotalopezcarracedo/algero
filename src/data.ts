@@ -1,12 +1,28 @@
 export const BOOKING_URL =
   'https://book.octorate.com/octobook/site/reservation/index.xhtml?codice=314439';
 
+export const WHATSAPP_URL = 'https://wa.me/3314106025';
+
+export const SMARTNESS_URL =
+  'https://commerce.smartness.com/hotelvillabarbarinaalghero';
+
 export const CONTACT = {
   phoneLabel: '079 999 9026',
   phoneHref: 'tel:+390799999026',
   email: 'info@villabarbarina.com',
   address: 'Str. Vicinale Pala Pirastru, 07041 Alghero SS',
   coordinates: '40.6520° N · 8.2817° E',
+  pec: 'geal_srls@pec.it',
+};
+
+export const LEGAL = {
+  company: 'Villa Barbarina S.r.l.',
+  vat: '02694410909',
+  rea: 'SS-197017',
+  capital: '€10.000,00',
+  established: '28/02/2017',
+  cir: '090003A1000F2709',
+  cin: 'IT090003A1000F2709',
 };
 
 export type Room = {

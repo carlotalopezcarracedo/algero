@@ -1,57 +1,61 @@
-# Design System — Villa Barbarina Nature Resort
+# Design System — Villa Barbarina / Sardinian Editorial Escape
 
-*Locked application-wide visual system. Future work should extend this world, not reinterpret it.*
+## Art direction
 
-## 1. Identity and structure
+Villa Barbarina is presented as an inhabited landscape rather than a catalogue of hotel features. The interface uses oversized editorial typography, photographic planes, controlled overlaps and large changes of scale. Its visual sequence moves through mineral daylight, deep vegetation, night charcoal and the warm colour of the table.
 
-- **Project**: Villa Barbarina Nature Resort, Alghero.
-- **Genre**: editorial hospitality.
-- **Macrostructure**: Photographic Chapters — full-bleed real photography alternates with quiet editorial spreads, ledgers and field notes.
-- **Navigation**: transparent masthead over photography, with language switcher and a permanent terracotta direct-booking action.
-- **Footer**: Ft5 architectural statement and factual colophon.
-- **Tone**: quiet, tactile, earthy, Mediterranean and precise.
+The homepage is intentionally composed as scenes:
 
-The homepage opens on a single aerial field image with a staggered three-line statement and factual estate rail. Interior pages share the same type, palette, rules and controls but change composition by subject: an asymmetric estate sequence for the resort, a viewport-scale room index, a dense kitchen spread, field-note rows for itineraries and a direct utility layout for contact.
+1. **Arrival** — layered property photography and the split BARBARINA word plane.
+2. **First breath** — a quiet magazine opening with one human-scale pool detail.
+3. **Estate coordinates** — real facts arranged as a typographic rail.
+4. **Landscape** — a deep-olive photographic chapter.
+5. **Rooms** — a desktop sticky journey and mobile photographic chapters.
+6. **Interruption** — one aerial image without promotional copy.
+7. **Table** — a wine-coloured food feature with displaced imagery.
+8. **Sardinia** — a typographic destination index with a changing photograph.
+9. **Arrival at night** — the direct-booking close.
 
-## 2. Typography
+## Typography
 
-- **Display**: `Cormorant Garamond`, weights 300–500. Headings are always upright; never italic.
-- **Body and controls**: `Instrument Sans`, weights 400–700.
-- **Technical register**: `JetBrains Mono`, limited to coordinates, labels, indexes and factual metadata.
-- Headlines may balance across lines, but words should only break as a last-resort overflow safeguard.
-- Prose uses a 48–68ch measure and body text never drops below 16px.
+- **Display**: `Bodoni Moda`, including its restrained italic. It carries large compositional words and editorial headlines.
+- **Body**: `Manrope`, used for readable copy and controls.
+- **Technical register**: `IBM Plex Mono`, limited to coordinates, numbering, facts and chapter labels.
 
-## 3. Colour
+Headlines may cross image boundaries but remain semantic HTML headings. Italian line breaks drive every composition; mobile is recomposed rather than mechanically stacked.
 
-- **Mineral paper**: `oklch(98.2% 0.008 75)`.
-- **Sun-warmed paper**: `oklch(94.8% 0.012 78)`.
-- **Vegetal ink**: `oklch(18.5% 0.02 135)`.
-- **Pine chapter**: `oklch(24% 0.032 138)`.
-- **Terracotta action**: `oklch(53% 0.13 42)`.
-- **Ochre detail**: `oklch(72% 0.12 85)`.
+## Colour and material
 
-Use terracotta for booking and directional emphasis, not decoration. Dark sections always switch to the dedicated on-dark ink token. All neutrals carry a warm or vegetal chroma; pure black and white are excluded.
+- Mineral canvas: `#f3efe5`
+- Linen paper: `#fbf8ef`
+- Sun-warmed field: `#e8d7b8`
+- Vegetation: `#1d2a20`
+- Night charcoal: `#141713`
+- Restaurant wine: `#5a2c27`
+- Plaster clay: `#a9482f`
 
-## 4. Layout and imagery
+The only texture is an extremely low-opacity grain. Colour changes create chapters; cards, rounded containers, decorative gradients and fake luxury effects are excluded.
 
-- Base spacing follows the 4px scale in `tokens.css`; outer gutters are fluid.
-- Structure is expressed with full-bleed fields, asymmetric image crops, hairline rules and deliberate open space, not rounded cards.
-- Photography must be real Villa Barbarina or destination imagery recovered from approved source material. Do not introduce stock luxury imagery, gradients or abstract filler.
-- Room lists are editorial indexes, itineraries are field-note rows and facts are presented as ledgers rather than feature-card grids.
-- Mobile collapses to one reading column, preserves 44px targets and never permits horizontal scrolling.
+## Interaction
 
-## 5. Interaction and motion
+- The room journey changes image, title and facts as the visitor crosses four scroll chapters on desktop; mobile receives four independent, usable room stories.
+- The destination index swaps its image on hover, focus and click; mobile displays complete destination chapters.
+- Route and hero images use short mask reveals. Selected large photographs use no more than 24px of parallax travel.
+- UI transitions use the editorial ease `cubic-bezier(0.23, 1, 0.32, 1)` and avoid spring or bounce motion.
+- `prefers-reduced-motion` removes parallax and collapses timing without hiding information.
 
-- Focus rings appear immediately and remain visibly distinct on light and dark surfaces.
-- Hover is only enabled for precise pointers; active controls use a restrained `scale(0.97)` response.
-- Inputs keep constant 1px borders across states, use native validation and preserve visible labels.
-- Motion is limited to the rare opening reveal, directional arrow feedback and the mobile navigation reveal. UI transitions remain below 300ms; `prefers-reduced-motion` keeps only gentle state changes.
-- Booking always opens the official Octorate flow. Contact submissions retain the official endpoint and open its confirmation in a separate tab.
+## Function and accessibility
 
-## 6. Durable assets
+- Octorate remains the single direct-booking endpoint.
+- The official contact endpoint, child-age fields, date validation, WhatsApp and Smartness marketplace remain functional.
+- Desktop and mobile navigation are keyboard accessible; Escape closes the full-screen menu and gallery.
+- The gallery is a semantic modal dialog and focus begins on its close control.
+- Visible controls use at least 44px touch targets, visible focus states and WCAG-oriented contrast.
+- All pages preserve one H1, meaningful landmarks, real alternative text and the original legal identifiers.
 
-- Semantic design tokens: `/tokens.css`.
-- Application styles and responsive rules: `/src/styles.css`.
-- Route content, URLs and room facts: `/src/data.ts`.
-- Approved photography: `/public/images/villa/`.
-- Product truth and non-invention constraints: `/PRODUCT.md`.
+## Durable sources
+
+- Visual implementation: `src/App.tsx`, `src/styles.css`, `tokens.css`
+- Verified business content: `src/data.ts`, `PRODUCT.md`
+- Original property photography: `public/images/villa/`
+- GitHub Pages route preparation: `scripts/prepare-pages.mjs`

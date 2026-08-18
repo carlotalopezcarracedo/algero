@@ -226,16 +226,43 @@ function LanguageSwitch({ compact = false }: { compact?: boolean }) {
   );
 }
 
-type PhotoProps = { src: string; alt: string; className?: string; eager?: boolean };
+type PhotoProps = { src: string; alt: string; className?: string; eager?: boolean; sizes?: string };
 
-function Photo({ src, alt, className = '', eager = false }: PhotoProps) {
+const compactImageWidths: Record<string, number> = {
+  'aerial.webp': 1096,
+  'alghero.webp': 1096,
+  'capo-caccia.webp': 1096,
+  'le-bombarde.webp': 1096,
+  'night-exterior.webp': 1024,
+  'porticciolo.webp': 1096,
+  'resort-pool.webp': 1170,
+};
+
+function Photo({
+  src,
+  alt,
+  className = '',
+  eager = false,
+  sizes = '(max-width: 720px) 100vw, (max-width: 1280px) 82vw, 1280px',
+}: PhotoProps) {
+  const isResponsive = src.endsWith('.webp');
+  const originalWidth = compactImageWidths[src.split('/').pop() ?? ''] ?? 2048;
+  const responsiveSources = isResponsive
+    ? [
+        `${publicAssetPath(src.replace(/\.webp$/, '-720.webp'))} 720w`,
+        ...(originalWidth > 1280 ? [`${publicAssetPath(src.replace(/\.webp$/, '-1280.webp'))} 1280w`] : []),
+        `${publicAssetPath(src)} ${originalWidth}w`,
+      ].join(', ')
+    : undefined;
   return (
     <img
       className={className}
       src={publicAssetPath(src)}
+      srcSet={responsiveSources}
+      sizes={isResponsive ? sizes : undefined}
       alt={alt}
       width="2048"
-      height="1365"
+      height="1536"
       loading={eager ? 'eager' : 'lazy'}
       fetchPriority={eager ? 'high' : 'auto'}
       decoding="async"
@@ -243,7 +270,7 @@ function Photo({ src, alt, className = '', eager = false }: PhotoProps) {
   );
 }
 
-function ImageReveal({ src, alt, className = '', eager = false }: PhotoProps) {
+function ImageReveal({ src, alt, className = '', eager = false, sizes }: PhotoProps) {
   const reduceMotion = useReducedMotion();
   return (
     <motion.figure
@@ -259,9 +286,35 @@ function ImageReveal({ src, alt, className = '', eager = false }: PhotoProps) {
         viewport={{ once: true, amount: 0.16 }}
         transition={{ duration: MOTION.slow, ease: MOTION.ease }}
       >
-        <Photo src={src} alt={alt} eager={eager} />
+        <Photo src={src} alt={alt} eager={eager} sizes={sizes} />
       </motion.div>
     </motion.figure>
+  );
+}
+
+function BotanicalMotif({ className = '' }: { className?: string }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <motion.div
+      className={`botanical-motif ${className}`.trim()}
+      aria-hidden="true"
+      initial={reduceMotion ? false : { opacity: 0, rotate: -3 }}
+      whileInView={{ opacity: 1, rotate: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: MOTION.slow, ease: MOTION.ease }}
+    >
+      <svg viewBox="0 0 220 126" fill="none">
+        <motion.path
+          d="M19 108C52 96 77 74 96 47C108 30 126 19 151 14"
+          initial={reduceMotion ? false : { pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1.35, ease: MOTION.ease }}
+        />
+        <motion.path d="M83 65C66 59 52 62 42 74C58 79 72 76 83 65ZM103 39C91 27 78 22 63 25C72 40 86 45 103 39ZM123 25C124 10 134 2 151 2C150 15 141 23 123 25ZM93 51C111 49 124 55 132 69C115 72 102 66 93 51ZM68 79C82 80 91 88 95 102C80 101 71 93 68 79Z" />
+        <circle cx="151" cy="14" r="4" />
+      </svg>
+    </motion.div>
   );
 }
 
@@ -386,6 +439,9 @@ function HomeHero() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.035]);
   const copyY = useTransform(scrollYProgress, [0, 1], [0, -28]);
+  const heroPoster = publicAssetPath(window.matchMedia('(max-width: 720px)').matches
+    ? '/images/villa/olive-grove-720.webp'
+    : '/images/villa/olive-grove-1280.webp');
 
   return (
     <section className="home-hero" ref={heroRef} aria-labelledby="home-hero-title">
@@ -405,7 +461,7 @@ function HomeHero() {
             loop
             playsInline
             preload="metadata"
-            poster={publicAssetPath('/images/villa/olive-grove.webp')}
+            poster={heroPoster}
             aria-hidden="true"
           >
             <source src={publicAssetPath('/images/villa/villa-barbarina-hero.mp4')} type="video/mp4" />
@@ -426,6 +482,15 @@ function HomeHero() {
           <BookingLink>Prenota il soggiorno</BookingLink>
           <SiteLink className="button button--secondary button--light" href="/resort/">{t('Scopri il resort')}</SiteLink>
         </div>
+      </motion.div>
+      <motion.div
+        className="home-hero__coordinates"
+        aria-hidden="true"
+        initial={reduceMotion ? false : { opacity: 0, x: 12 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: MOTION.slow, ease: MOTION.ease, delay: 0.7 }}
+      >
+        <span>40°39' N</span><i /><span>8°16' E</span>
       </motion.div>
       <a className="home-hero__scroll" href="#intro"><span>{t('Scopri')}</span><ChevronDown aria-hidden="true" size={18} /></a>
     </section>
@@ -454,6 +519,7 @@ function HomeIntroduction() {
     <>
       <section className="intro-section shell" id="intro" aria-labelledby="intro-title">
         <div className="section-kicker"><span>01</span><p>{t('La tenuta')}</p></div>
+        <BotanicalMotif className="intro-section__motif" />
         <RevealBlock className="intro-section__copy">
           <h2 id="intro-title">{t('Il ritmo quieto della campagna, vicino al mare.')}</h2>
           <div>
@@ -473,7 +539,7 @@ function HomeIntroduction() {
 function ResortExperience() {
   const { t } = useLanguage();
   return (
-    <section className="resort-experience section-space" aria-labelledby="resort-experience-title">
+    <section className="resort-experience section-space" data-chapter="02" aria-labelledby="resort-experience-title">
       <div className="shell story-grid">
         <ImageReveal className="story-grid__main" src="/images/villa/villa-exterior.webp" alt={t('Una camera di Villa Barbarina affacciata sul giardino')} />
         <RevealBlock className="story-grid__content">
@@ -495,7 +561,7 @@ function RoomsExplorer({ compact = false }: { compact?: boolean }) {
   const activeRoom = rooms[activeIndex];
 
   return (
-    <section className={`rooms-section section-space ${compact ? 'rooms-section--compact' : ''}`} aria-labelledby="rooms-title">
+    <section className={`rooms-section section-space ${compact ? 'rooms-section--compact' : ''}`} data-chapter={compact ? undefined : '03'} aria-labelledby="rooms-title">
       <div className="shell">
         {!compact ? (
           <div className="section-heading">
@@ -578,7 +644,7 @@ function VisualPause() {
 function RestaurantFeature() {
   const { t } = useLanguage();
   return (
-    <section className="restaurant-feature section-space" aria-labelledby="restaurant-feature-title">
+    <section className="restaurant-feature section-space" data-chapter="04" aria-labelledby="restaurant-feature-title">
       <div className="shell culinary-grid">
         <ImageReveal className="culinary-grid__main" src="/images/villa/crudo.webp" alt={t('Selezione di piatti di mare del ristorante Villa Barbarina')} />
         <RevealBlock className="culinary-grid__content">
@@ -600,7 +666,7 @@ function DestinationExplorer({ compact = false }: { compact?: boolean }) {
   const activeDestination = destinations[activeIndex];
 
   return (
-    <section className={`destination-section section-space ${compact ? 'destination-section--compact' : ''}`} aria-labelledby="destination-title">
+    <section className={`destination-section section-space ${compact ? 'destination-section--compact' : ''}`} data-chapter={compact ? undefined : '05'} aria-labelledby="destination-title">
       <div className="shell">
         {!compact ? (
           <div className="section-heading">
@@ -990,7 +1056,25 @@ export default function App() {
   return (
     <LanguageContext.Provider value={{ locale, t }}>
       <Header pathname={pathname} />
-      <motion.div id="app-content" key={`${pathname}-${locale}`} initial={{ opacity: 0.985 }} animate={{ opacity: 1 }} transition={{ duration: MOTION.fast }}>{page}</motion.div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          id="app-content"
+          key={`${pathname}-${locale}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: MOTION.normal, ease: MOTION.ease }}
+        >
+          <motion.span
+            className="route-transition-line"
+            aria-hidden="true"
+            initial={{ scaleX: 0, opacity: 0.9 }}
+            animate={{ scaleX: 1, opacity: 0 }}
+            transition={{ duration: 0.72, ease: MOTION.ease }}
+          />
+          {page}
+        </motion.div>
+      </AnimatePresence>
       <Footer />
       <MobileDock />
     </LanguageContext.Provider>
